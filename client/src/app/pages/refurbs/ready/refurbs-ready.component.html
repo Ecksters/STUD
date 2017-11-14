@@ -1,0 +1,10 @@
+<section class="content">
+    <header class="content__title">
+        <h1>Refurbs Ready for Donation</h1>
+        <small>All refurbs that have been submitted and verified as ready to be donated.</small>
+    </header>
+    <div class="alert alert-warning" role="alert" *ngIf="!sharedService.locationSelected">
+        You must select a Location at the top right before you can see refurbs that are ready for donation.
+    </div>
+    <refurbs-list *ngIf="sharedService.locationSelected" status="verified"></refurbs-list>
+</section>

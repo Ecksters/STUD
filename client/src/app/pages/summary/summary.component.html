@@ -1,0 +1,68 @@
+<section class="content">
+    <header class="content__title">
+        <h1>Summary</h1>
+        <small>Welcome STUD, this project is still a work in progress, if you run into any bugs, please open your developer console (usually F12),
+          take a screenshot of the whole page, and submit a New Issue on our <a target="_blank" href="https://github.com/Ecksters/STUD/issues">Github issues page</a>.<br><br>
+          We're currently in Alpha testing, meaning major features still need to be implemented, and more may be added at a rapid pace. To see future plans
+          for the project, head on over to our <a target="_blank" href="https://github.com/Ecksters/STUD/projects/1">Project page</a>. Thanks for helping out with testing!
+        </small>
+
+        <div class="actions">
+            <a class="actions__item zmdi zmdi-trending-up" [routerLink]="['/home']"></a>
+            <a class="actions__item zmdi zmdi-check-all" [routerLink]="['/home']"></a>
+            <div dropdown>
+                <i dropdownToggle class="actions__item zmdi zmdi-more-vert"></i>
+                <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
+                    <a [routerLink]="['/home']" class="dropdown-item">Refresh</a>
+                    <a [routerLink]="['/home']" class="dropdown-item">Manage Widgets</a>
+                    <a [routerLink]="['/home']" class="dropdown-item">Settings</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!--
+    <quick-stats></quick-stats>
+
+    <div class="row">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Sales Statistics</h2>
+                    <small class="card-subtitle">Vestibulum purus quam scelerisque, mollis nonummy metus</small>
+                </div>
+                <div class="card-block">
+                    <div flot [options]="salesStatChartOptions" [dataset]="salesStatChartData" [height]="200"></div>
+                    <div class="flot-chart-legends flot-chart-legends--curved"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title">Growth Rate</h2>
+                    <small class="card-subtitle">Commodo luctus nisi erat porttitor ligula eget lacinia odio semnec elit</small>
+                </div>
+
+                <div class="card-block">
+                    <div flot [options]="lineChartOptions" [dataset]="lineChartData" [height]="200"></div>
+                    <div class="flot-chart-legends flot-chart-legends--lines"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="widget-lists card-columns">
+        <widget-past-days></widget-past-days>
+
+        <widget-random-post></widget-random-post>
+
+        <widget-pie-charts></widget-pie-charts>
+
+        <widget-recent-posts></widget-recent-posts>
+
+        <widget-todo-lists></widget-todo-lists>
+    </div>
+    -->
+</section>

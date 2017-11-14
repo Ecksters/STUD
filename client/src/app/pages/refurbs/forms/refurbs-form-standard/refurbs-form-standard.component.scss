@@ -1,0 +1,13 @@
+span.input-group-addon {
+  width: 145px;
+}
+
+select:required:invalid {
+  color: gray;
+}
+option[value=""][disabled] {
+  display: none;
+}
+option {
+  color: black;
+}

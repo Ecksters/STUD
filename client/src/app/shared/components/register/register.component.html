@@ -1,0 +1,66 @@
+<button *ngIf="showButton"  type="button" class="btn btn-primary btn-lg" (click)="openModal(registerModal)">Sign Up</button>
+
+<ng-template #registerModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Sign Up</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <form (ngSubmit)="registerForm.valid && register(registerForm)" novalidate #registerForm="ngForm" #signUpForm>
+          <div class="input-group">
+            <span class="input-group-addon"><i class="zmdi zmdi-email register__helper"></i></span>
+            <div class="form-group">
+              <input ngModel #email="ngModel"
+              email [ngClass]="{'is-invalid': (email.touched || registerForm.submitted) && !email.valid}"
+              [readonly]="loading" id="email" name="email" type="text" class="form-control" placeholder="Email Address">
+              <i class="form-group__bar"></i>
+            </div>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"><i class="zmdi zmdi-account register__helper"></i></span>
+            <div class="form-group">
+              <input ngModel #name="ngModel"
+              required [ngClass]="{'is-invalid': (name.touched || registerForm.submitted) && !name.valid}"
+              [readonly]="loading" id="name" name="name" type="text" class="form-control" placeholder="Full Name">
+              <i class="form-group__bar"></i>
+            </div>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"><i class="zmdi zmdi-lock register__helper"></i></span>
+            <div class="form-group" [ngClass]="{'has-danger': (password.touched || registerForm.submitted) && !password.valid}">
+              <input ngModel #password="ngModel"
+              required [ngClass]="{'form-control-danger': (password.touched || registerForm.submitted) && !password.valid}"
+              [readonly]="loading" id="password" name="password" type="password" class="form-control" placeholder="Password">
+              <i class="form-group__bar"></i>
+            </div>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"><i class="zmdi zmdi-shield-check register__helper"></i></span>
+            <div class="form-group" [ngClass]="{'has-danger': (repeat.touched || registerForm.submitted) && !(password.value === repeat.value)}">
+              <input ngModel #repeat="ngModel"
+              required [ngClass]="{'form-control-danger': (repeat.touched || registerForm.submitted) && !(password.value === repeat.value)}"
+              [readonly]="loading" id="repeat" name="repeat" type="password" class="form-control" placeholder="Confirm Password">
+              <i class="form-group__bar"></i>
+            </div>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"><i class="zmdi zmdi-group-work register__helper"></i></span>
+            <div class="form-group" [ngClass]="{'has-danger': (accessCode.touched || registerForm.submitted) && !accessCode.valid}">
+              <input ngModel #accessCode="ngModel"
+              required [ngClass]="{'form-control-danger': (accessCode.touched || registerForm.submitted) && !accessCode.valid}"
+              [readonly]="loading" id="accessCode" name="accessCode" type="text" class="form-control" placeholder="Access Code">
+              <i class="form-group__bar"></i>
+            </div>
+          </div>
+          <br>
+          <button [disabled]="loading" type="submit" class="btn btn-primary">Submit</button> <i *ngIf="loading" class="zmdi zmdi-spinner"></i>
+          <span style="margin: 2px;" [hidden]="!(registerForm.submitted && !registerForm.valid)" class="badge badge-danger">{{ errorMsg }}</span>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>

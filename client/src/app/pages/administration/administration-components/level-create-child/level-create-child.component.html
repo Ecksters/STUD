@@ -1,0 +1,68 @@
+<div class="card" *ngIf="context">
+  <div class="card-body">
+    <h4 class="card-title">Add New {{ context.childProperName }}</h4>
+    <div class="row">
+      <div class="col-sm-12">
+        <form (ngSubmit)="newChildForm.valid && createChild(newChildForm)" novalidate #newChildForm="ngForm">
+          <div class="input-group">
+            <span class="input-group-addon"><i class="zmdi zmdi-hc-lg zmdi-globe"></i></span>
+            <div class="form-group">
+              <input ngModel #newChildName="ngModel"
+              [ngClass]="{'is-invalid': (newChildName.touched || newChildForm.submitted) && !newChildName.valid, 'is-valid': newChildName.valid}"
+              [readonly]="loading" id="newChildName" name="newChildName"
+              type="text" required minlength="2" class="form-control" [placeholder]="'New ' + context.childProperName + ' Name'">
+              <i class="form-group__bar"></i>
+            </div>
+            <div *ngIf="!newChildForm.valid && (newChildForm.submitted || newChildName.touched)">
+                <span *ngFor="let error of system.getPrettyErrors(newChildName.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+            </div>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"><i class="zmdi zmdi-hc-lg zmdi-group-work"></i></span>
+            <div class="form-group">
+              <input [ngModel]="accessCode" #newChildAccessCode="ngModel"
+              [ngClass]="{'is-invalid': (newChildAccessCode.touched || newChildForm.submitted) && !newChildAccessCode.valid, 'is-valid': newChildAccessCode.valid && newChildAccessCode.touched}"
+              [readonly]="loading" id="newChildAccessCode" name="newChildAccessCode"
+              type="text" required minlength="5" maxlength="20" class="form-control" [placeholder]="context.childProperName + ' Access Code'">
+              <i class="form-group__bar"></i>
+            </div>
+            <span class="input-group-btn">
+                <button class="btn btn-secondary" type="button" (click)="newChildForm.controls['newChildAccessCode'].setValue(system.randomWord(8))"><i class="zmdi zmdi-hc-lg zmdi-shuffle"></i> New Random Access Code</button>
+            </span>
+            <div *ngIf="!newChildForm.valid && (newChildForm.submitted || newChildAccessCode.touched)">
+                <span *ngFor="let error of system.getPrettyErrors(newChildAccessCode.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+            </div>
+          </div>
+          <div class="input-group">
+              <span class="input-group-addon"><i class="zmdi zmdi-hc-lg zmdi-collection-plus"></i></span>
+              <div class="form-group">
+                <input ngModel #newChildAccessCodeUses="ngModel"
+                [ngClass]="{'is-invalid': (newChildAccessCodeUses.touched || newChildForm.submitted) && !newChildAccessCodeUses.valid, 'is-valid': newChildAccessCodeUses.valid && newChildAccessCodeUses.touched}"
+                [readonly]="loading" id="newChildAccessCodeUses" name="newChildAccessCodeUses"
+                type="number" class="form-control" min="0" [placeholder]="'Access Code Use Limit (Default is ' + defaultUseLimit + ')'">
+                <i class="form-group__bar"></i>
+              </div>
+              <div *ngIf="!newChildForm.valid && (newChildForm.submitted || newChildAccessCodeUses.touched)">
+                  <span *ngFor="let error of system.getPrettyErrors(newChildAccessCodeUses.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+              </div>
+            </div>
+          <div class="input-group">
+            <span class="input-group-addon"><i class="zmdi zmdi-hc-lg zmdi-calendar"></i></span>
+            <div class="form-group">
+              <input type="text" name="newChildAccessCodeExpiration" ngModel
+              #newChildAccessCodeExpiration="ngModel" date placeholder="Expiration Date (Leave blank to never expire)"
+              bsDatepicker placement="top" class="form-control">
+              <i class="form-group__bar"></i>
+            </div>
+            <div *ngIf="!newChildForm.valid && (newChildForm.submitted || newChildAccessCodeExpiration.touched)">
+                <span *ngFor="let error of system.getPrettyErrors(newChildAccessCodeExpiration.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+            </div>
+          </div>
+          <br>
+          <button [disabled]="loading" type="submit" class="btn btn-primary">Create {{ context.childProperName }}</button> <i *ngIf="loading" class="zmdi zmdi-hc-lg zmdi-spinner"></i>
+          <span *ngFor="let error of serverErrors" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

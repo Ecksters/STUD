@@ -1,0 +1,70 @@
+<div class="card" *ngIf="context">
+  <div class="card-body">
+    <h4 class="card-title">{{ context.levelProperName }} Settings</h4>
+    <div class="row">
+      <div class="col-sm-12">
+        <form (ngSubmit)="updateLevelForm.valid && updateLevel(updateLevelForm)" novalidate #updateLevelForm="ngForm">
+          <div class="input-group">
+            <span class="input-group-addon" style="width: 135px"><i class="zmdi zmdi-hc-lg zmdi-globe"></i>&nbsp;&nbsp;{{ context.levelProperName }} Name</span>
+            <div class="form-group">
+              <input [ngModel]="context.level.name" #updateLevelName="ngModel"
+              [ngClass]="{'is-invalid': (updateLevelName.touched || updateLevelForm.submitted) && !updateLevelName.valid, 'is-valid': updateLevelName.touched && updateLevelName.valid}"
+              [readonly]="loading" id="updateLevelName" name="updateLevelName"
+              type="text" required minlength="2" class="form-control" [placeholder]="'New ' + context.childProperName + ' Name'">
+              <i class="form-group__bar"></i>
+            </div>
+            <div *ngIf="!updateLevelForm.valid && (updateLevelForm.submitted || updateLevelName.touched)">
+                <span *ngFor="let error of system.getPrettyErrors(updateLevelName.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+            </div>
+          </div>
+          <ng-container *ngIf="admin">
+            <div class="input-group">
+              <span class="input-group-addon" style="width: 135px"><i class="zmdi zmdi-hc-lg zmdi-group-work"></i>&nbsp;&nbsp;Access Code</span>
+              <div class="form-group">
+                <input [ngModel]="context.accessCodes ? context.accessCodes.level.code : 'Loading...'" #updateLevelAccessCode="ngModel"
+                [ngClass]="{'is-invalid': (updateLevelAccessCode.touched || updateLevelForm.submitted) && !updateLevelAccessCode.valid, 'is-valid': updateLevelAccessCode.valid && updateLevelAccessCode.touched}"
+                [readonly]="loading" id="updateLevelAccessCode" name="updateLevelAccessCode"
+                type="text" required minlength="5" maxlength="20" class="form-control" [placeholder]="context.childProperName + ' Access Code'">
+                <i class="form-group__bar"></i>
+              </div>
+              <span class="input-group-btn">
+                  <button class="btn btn-secondary" type="button" (click)="updateLevelForm.controls['updateLevelAccessCode'].setValue(system.randomWord(8))"><i class="zmdi zmdi-hc-lg zmdi-shuffle"></i> New Random Access Code</button>
+              </span>
+              <div *ngIf="!updateLevelForm.valid && (updateLevelForm.submitted || updateLevelAccessCode.touched)">
+                  <span *ngFor="let error of system.getPrettyErrors(updateLevelAccessCode.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+              </div>
+            </div>
+            <div class="input-group">
+                <span class="input-group-addon" style="width: 135px"><i class="zmdi zmdi-hc-lg zmdi-collection-plus"></i>&nbsp;&nbsp;Code Uses Left</span>
+                <div class="form-group">
+                  <input [ngModel]="context.accessCodes ? context.accessCodes.level.uses : ''" #updateLevelAccessCodeUses="ngModel"
+                  [ngClass]="{'is-invalid': (updateLevelAccessCodeUses.touched || updateLevelForm.submitted) && !updateLevelAccessCodeUses.valid, 'is-valid': updateLevelAccessCodeUses.valid && updateLevelAccessCodeUses.touched}"
+                  [readonly]="loading" id="updateLevelAccessCodeUses" name="updateLevelAccessCodeUses"
+                  type="number" class="form-control" min="0" [placeholder]="'Access Code Use Limit (Default is ' + defaultUseLimit + ')'">
+                  <i class="form-group__bar"></i>
+                </div>
+                <div *ngIf="!updateLevelForm.valid && (updateLevelForm.submitted || updateLevelAccessCodeUses.touched)">
+                    <span *ngFor="let error of system.getPrettyErrors(updateLevelAccessCodeUses.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+                </div>
+              </div>
+            <div class="input-group">
+              <span class="input-group-addon" style="width: 135px"><i class="zmdi zmdi-hc-lg zmdi-calendar"></i>&nbsp;&nbsp;Code Expiration</span>
+              <div class="form-group">
+                <input type="text" name="updateLevelAccessCodeExpiration" [ngModel]="context.accessCodes ? context.accessCodes.level.expirationDate : ''"
+                #updateLevelAccessCodeExpiration="ngModel" date placeholder="Expiration Date (Leave blank to never expire)"
+                bsDatepicker placement="top" class="form-control">
+                <i class="form-group__bar"></i>
+              </div>
+              <div *ngIf="!updateLevelForm.valid && (updateLevelForm.submitted || updateLevelAccessCodeExpiration.touched)">
+                  <span *ngFor="let error of system.getPrettyErrors(updateLevelAccessCodeExpiration.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+              </div>
+            </div>
+          </ng-container>
+          <br>
+          <button *ngIf="updateLevelForm.touched" [disabled]="loading" type="submit" class="btn btn-primary">Update {{ context.levelProperName }}</button> <i *ngIf="loading" class="zmdi zmdi-hc-lg zmdi-spinner"></i>
+          <span *ngFor="let error of serverErrors" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

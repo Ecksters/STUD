@@ -1,0 +1,21 @@
+<div class="listview listview--hover">
+    <div class="listview__header">
+        Change Focus
+    </div>
+    <div *ngFor="let region of locationOptions">
+      <a>
+        <div class="listview__content regionHeading" [ngClass]="{'selected': region.id == sharedService.regionSelected}" (click)=selectRegion(region.id)>
+          <h5 class="text-center"><u>{{ region.name }} Region</u> <i class="zmdi zmdi-check" *ngIf="region.id == sharedService.regionSelected" style="color: rgb(0, 58, 0)"></i></h5>
+        </div>
+      </a>
+      <a *ngFor="let location of region.locations" class="listview__item" (click)="selectLocation(location.id, region.id)" [ngClass]="{'selected': location.id == sharedService.locationSelected}">
+          <div class="listview__content">
+              <h3 class="listview__heading">
+                  {{ location.name }}
+                  <i class="zmdi zmdi-check" *ngIf="location.id == sharedService.locationSelected" style="color: rgb(0, 58, 0)"></i>
+                  <small>Extra Data</small>
+              </h3>
+          </div>
+      </a>
+    </div>
+</div>

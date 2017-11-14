@@ -1,0 +1,48 @@
+// Import Bootstrap and App variables and mixins
+@import "../../../assets/scss/inner-imports";
+
+
+// Header Base
+.header {
+  position: fixed;
+  width: 100%;
+  height: $header-height;
+  box-shadow: $header-shadow;
+  color: $white;
+  padding: 0 2rem;
+  z-index: $header-z-index;
+  display: flex;
+  align-items: center;
+  background-color: #607D8B !important;
+  top: 0;
+  left: 0;
+
+  @include clearfix();
+
+  .ma-backdrop {
+    position: absolute;
+  }
+}
+
+// Logo
+.header__logo {
+  @include media-breakpoint-up(xl) {
+    min-width: calc(#{$sidebar-width} - 2rem);
+  }
+
+  & > h1 {
+    line-height: 100%;
+    font-size: 1.3rem;
+    font-weight: normal;
+    margin: 0;
+
+    & > a {
+      color: $white;
+    }
+  }
+}
+
+.user-buttons {
+  position: absolute;
+  right: 10px;
+}

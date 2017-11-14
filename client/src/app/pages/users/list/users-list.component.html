@@ -1,0 +1,58 @@
+<div class="input-group">
+  <span class="input-group-addon">
+    <i class="zmdi zmdi-hc-lg zmdi-search"></i>
+    <div class="form-group form-group--select">
+      <div class="select">
+        <select class="form-control" (change)="updateFilter()" #searchType style="height: calc(2rem); padding: 0 1rem;">
+          <option>Name</option>
+          <option>Role</option>
+          <option *ngIf="LevelService.levels[levelService.levelIndex] === 'region'">Location</option>
+          <option *ngIf="LevelService.levels[levelService.levelIndex] !== 'section'">Section</option>
+        </select>
+      </div>
+    </div>
+  </span>
+  <div class="form-group">
+    <input (keyup)="updateFilter()" #searchValue
+    type="text" class="form-control" placeholder="Type to filter">
+    <i class="form-group__bar"></i>
+  </div>
+</div>
+<ngx-datatable *ngIf="users;else loading" class="material striped"
+[rowHeight]="'auto'"
+[columnMode]="'force'"
+[rows]="rows"
+[footerHeight]="40"
+[limit]="10">
+  <ngx-datatable-column prop="name"></ngx-datatable-column>
+  <ngx-datatable-column prop="role">
+      <ng-template let-row="row" ngx-datatable-cell-template>
+            {{ LevelService.roles[row.role] }}
+      </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="location" *ngIf="LevelService.levels[levelService.levelIndex] === 'region'">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+        <ng-container *ngIf="row.role < Role.RegionAdmin">
+          {{ sharedService.scope[row.region][row.location].name }}
+        </ng-container>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column prop="section" *ngIf="LevelService.levels[levelService.levelIndex] !== 'section'">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+      <ng-container *ngIf="row.role < Role.LocationMod">
+        {{ sharedService.scope[row.region][row.location][row.section].name }}
+      </ng-container>
+    </ng-template>
+  </ngx-datatable-column>
+  <ngx-datatable-column name="View Profile" [sortable]="false"
+  headerClass="text-center" cellClass="text-center">
+    <ng-template let-row="row" ngx-datatable-cell-template>
+      <button type="button" class="btn btn-warning btn-sm"
+      placement="left" container="body" [tooltip]="'View Profile for ' + row.name"
+      (click)="editChild(row.user)"><i class="zmdi zmdi-hc-lg zmdi-edit" style="pointer-events: none;"></i></button>
+    </ng-template>
+  </ngx-datatable-column>
+</ngx-datatable>
+<ng-template #loading>
+  Loading... <i class="zmdi zmdi-hc-lg zmdi-spinner"></i>
+</ng-template>

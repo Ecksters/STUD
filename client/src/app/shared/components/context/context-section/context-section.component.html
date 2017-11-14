@@ -1,0 +1,12 @@
+<div class="input-group" id="sectionSelectorInput">
+  <span class="input-group-addon"><i class="fa fa-sitemap" aria-hidden="true"></i>&nbsp;&nbsp;Section</span>
+  <div class="form-group form-group--select" style="border: 1px solid #eceff1">
+    <div class="select">
+      <select class="form-control" required (change)="selectSection(sectionSelector.value)" [(value)]="this.sectionSelected" #sectionSelector>
+        <option value="" disabled>{{ selectPlaceholder }}</option>
+        <option *ngFor="let section of sections" [value]="section.id">{{section.name}}</option>
+      </select>
+      <i class="form-group__bar"></i>
+    </div>
+  </div>
+</div>

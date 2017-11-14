@@ -1,0 +1,10 @@
+<section class="content">
+  <header class="content__title">
+    <h1>Refurbs Donated in the Past</h1>
+    <small>All refurbs have already been donated.</small>
+  </header>
+  <div class="alert alert-warning" role="alert" *ngIf="!sharedService.locationSelected">
+      You must select a Location at the top right before you can see refurbs donated.
+  </div>
+  <refurbs-list *ngIf="sharedService.locationSelected" status="donated"></refurbs-list>
+</section>

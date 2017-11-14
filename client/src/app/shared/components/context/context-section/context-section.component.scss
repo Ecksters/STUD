@@ -1,0 +1,13 @@
+#sectionSelectorInput {
+  background-color: rgba(#fff, .3);
+}
+
+select:required:invalid {
+  color: gray;
+}
+option[value=""][disabled] {
+  display: none;
+}
+option {
+  color: black;
+}

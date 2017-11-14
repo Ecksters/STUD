@@ -1,0 +1,21 @@
+<section class="content">
+    <header class="content__title">
+      <h1>Submit New Refurbs</h1>
+      <small>Submit a newly completed system for verification and donation.</small>
+      <div class="actions">
+          <context-section></context-section>
+      </div>
+    </header>
+    <div class="alert alert-warning" role="alert" *ngIf="!sharedService.sectionSelected">
+        You must select a Section at the top right before you can submit a refurb
+    </div>
+    <div class="card" *ngIf="sharedService.sectionSelected">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <refurbs-form-standard></refurbs-form-standard>
+          </div>
+        </div>
+      </div>
+    </div>
+</section>

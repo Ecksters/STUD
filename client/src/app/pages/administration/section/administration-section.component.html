@@ -1,0 +1,26 @@
+<section class="content">
+  <header class="content__title">
+    <h1>Section Administration</h1>
+    <small>Modify Location settings and ownership. Locations are branches of a Region which actually perform the repairs, and generally contain multiple Sections.</small>
+
+    <div class="actions">
+        <context-section></context-section>
+    </div>
+  </header>
+  <div class="alert alert-warning" role="alert" *ngIf="!sharedService.sectionSelected">
+      You aren't focusing on any Section yet! Use the Section Switcher at the top right to pick a Section to configure.
+  </div>
+  <ng-container *ngIf="sharedService.sectionSelected">
+    <level-info [context]="context"></level-info>
+    <div class="card" *ngIf="context">
+      <div class="card-body">
+        <h4 class="card-title">Users within {{ context.levelProperName }}</h4>
+        <div class="row">
+          <div class="col-sm-12">
+            <users-list [levelService]="sectionService"></users-list>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</section>

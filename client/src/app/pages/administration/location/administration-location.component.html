@@ -1,0 +1,37 @@
+<section class="content">
+  <header class="content__title">
+    <h1>Location Administration</h1>
+    <small>Modify Location settings and ownership. Locations are branches of a Region which actually perform the repairs, and generally contain multiple Sections.</small>
+
+    <div class="actions">
+        <a class="actions__item zmdi zmdi-trending-up" [routerLink]="['/home']"></a>
+        <a class="actions__item zmdi zmdi-check-all" [routerLink]="['/home']"></a>
+        <div dropdown>
+            <i dropdownToggle class="actions__item zmdi zmdi-more-vert"></i>
+            <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
+                <a [routerLink]="['/home']" class="dropdown-item">Refresh</a>
+                <a [routerLink]="['/home']" class="dropdown-item">Manage Widgets</a>
+                <a [routerLink]="['/home']" class="dropdown-item">Settings</a>
+            </div>
+        </div>
+    </div>
+  </header>
+  <div class="alert alert-warning" role="alert" *ngIf="!sharedService.locationSelected">
+      You aren't focusing on any Location yet! Use the Location Switcher at the top right to pick a Location to configure.
+  </div>
+  <ng-container *ngIf="sharedService.locationSelected">
+    <level-info [context]="context"></level-info>
+    <level-list-children [context]="context"></level-list-children>
+    <level-create-child [context]="context"></level-create-child>
+    <div class="card" *ngIf="context">
+      <div class="card-body">
+        <h4 class="card-title">Users within {{ context.levelProperName }}</h4>
+        <div class="row">
+          <div class="col-sm-12">
+            <users-list [levelService]="locationService"></users-list>
+          </div>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</section>

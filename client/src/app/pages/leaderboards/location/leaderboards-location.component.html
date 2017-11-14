@@ -1,0 +1,9 @@
+<section class="content">
+    <header class="content__title">
+      <h1>Location Leaderboards</h1>
+      <small>Compete and discover who the top submitters are within your location</small>
+    </header>
+    <div class="alert alert-warning" role="alert" *ngIf="!sharedService.locationSelected">
+        You must select a Location at the top right to view the Leaderboards for that Location
+    </div>
+</section>

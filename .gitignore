@@ -1,0 +1,12 @@
+
+client/\.vscode/
+
+client/e2e/
+
+client/node_modules/
+
+client/\.editorconfig
+
+client/package-lock\.json
+
+server/nbproject/

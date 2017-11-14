@@ -1,0 +1,188 @@
+<form (ngSubmit)="newRefurbForm.valid && confirmedInfo() && submitRefurb(newRefurbForm)" novalidate #newRefurbForm="ngForm">
+  <h4>Appearance</h4>
+  <div class="input-group">
+    <span class="input-group-addon"><i class="zmdi zmdi-devices"></i>&nbsp;&nbsp;Form Factor</span>
+    <div class="form-group form-group--select">
+      <div class="select">
+        <select class="form-control" required [(ngModel)]="refurb.formFactor" #formFactor="ngModel"
+        [ngClass]="{'is-invalid': (formFactor.touched || newRefurbForm.submitted) && !formFactor.valid, 'is-valid': formFactor.valid}"
+        [disabled]="loading" name="formFactor">
+          <option value="" disabled selected>What type of system is it?</option>
+          <option value="desktop">Desktop</option>
+          <option value="laptop">Laptop</option>
+          <option value="allinone">All-in-One</option>
+        </select>
+        <i class="form-group__bar"></i>
+      </div>
+    </div>
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon"><i class="zmdi zmdi-wrench"></i>&nbsp;&nbsp;Manufacturer</span>
+    <div class="form-group">
+      <input [(ngModel)]="refurb.manufacturer" #manufacturer="ngModel"
+      [ngClass]="{'is-invalid': (manufacturer.touched || newRefurbForm.submitted) && !manufacturer.valid, 'is-valid': manufacturer.valid}"
+      [readonly]="loading" id="manufacturer" name="manufacturer"
+      type="text" required class="form-control" placeholder="Examples: Dell, HP, Lenovo, etc.">
+      <i class="form-group__bar"></i>
+    </div>
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon"><i class="zmdi zmdi-label"></i>&nbsp;&nbsp;Model</span>
+    <div class="form-group">
+      <input [(ngModel)]="refurb.model" #model="ngModel"
+      [ngClass]="{'is-invalid': (model.touched || newRefurbForm.submitted) && !model.valid, 'is-valid': model.valid}"
+      [readonly]="loading" id="model" name="model"
+      type="text" required class="form-control" placeholder="Examples: Latitude D630, Pavilion 570-p015z, etc.">
+      <i class="form-group__bar"></i>
+    </div>
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon"><i class="zmdi zmdi-eyedropper"></i>&nbsp;&nbsp;Color</span>
+    <div class="form-group">
+      <input [(ngModel)]="refurb.color" #color="ngModel" (keyup)="capitalize('color')"
+      [ngClass]="{'is-invalid': (color.touched || newRefurbForm.submitted) && !color.valid, 'is-valid': color.valid}"
+      [readonly]="loading" id="color" name="color"
+      type="text" required class="form-control" placeholder="Most prominent color (examples: black, white, silver, etc.)">
+      <i class="form-group__bar"></i>
+    </div>
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon"><i class="zmdi zmdi-photo-size-select-small"></i>&nbsp;&nbsp;Size</span>
+    <div class="form-group form-group--select">
+      <div class="select">
+        <select class="form-control" required [(ngModel)]="refurb.size" #size="ngModel"
+        [ngClass]="{'is-invalid': (size.touched || newRefurbForm.submitted) && !size.valid, 'is-valid': size.valid}"
+        [disabled]="loading" name="size">
+          <option value="" disabled selected>How large is the system for its form factor?</option>
+          <option value="small">Small</option>
+          <option value="average">Average</option>
+          <option value="large">Large</option>
+        </select>
+        <i class="form-group__bar"></i>
+      </div>
+    </div>
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon"><i class="zmdi zmdi-eye"></i>&nbsp;&nbsp;Condition</span>
+    <div class="form-group form-group--select">
+      <div class="select">
+        <select class="form-control" required [(ngModel)]="refurb.state" #state="ngModel"
+        [ngClass]="{'is-invalid': (state.touched || newRefurbForm.submitted) && !state.valid, 'is-valid': state.valid}"
+        [disabled]="loading" name="state">
+          <option value="" disabled selected>How used does it look</option>
+          <option value="good">Good (Near New)</option>
+          <option value="normal">Normal (Slightly Used)</option>
+          <option value="poor">Poor (Significant Damage)</option>
+        </select>
+        <i class="form-group__bar"></i>
+      </div>
+    </div>
+  </div>
+  <br>
+  <h4>System Specifications</h4>
+  <div class="input-group">
+      <span class="input-group-addon"><i class="fa fa-folder" aria-hidden="true"></i>&nbsp;&nbsp;Operating System</span>
+      <div class="form-group">
+        <input [(ngModel)]="refurb.os" #os="ngModel"
+        [ngClass]="{'is-invalid': (os.touched || newRefurbForm.submitted) && !os.valid, 'is-valid': os.valid}"
+        [readonly]="loading" id="os" name="os"
+        type="text" required class="form-control" placeholder="Which Operating System was installed? (examples: Windows 10, Elementary OS, Mac OS X Sierra, etc.)">
+        <i class="form-group__bar"></i>
+      </div>
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon"><i class="fa fa-microchip" aria-hidden="true"></i>&nbsp;&nbsp;Processor</span>
+    <div class="form-group">
+      <input [(ngModel)]="refurb.processor" #processor="ngModel"
+      [ngClass]="{'is-invalid': (processor.touched || newRefurbForm.submitted) && !processor.valid, 'is-valid': processor.valid}"
+      [readonly]="loading" id="processor" name="processor"
+      type="text" required class="form-control" placeholder="System processor information (example: Intel Core i5-2500, 3.3Ghz, 4 Cores)">
+      <i class="form-group__bar"></i>
+    </div>
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon"><i class="fa fa-server" aria-hidden="true"></i>&nbsp;&nbsp;Memory (RAM)</span>
+    <div class="form-group">
+      <input [(ngModel)]="refurb.ram" #ram="ngModel"
+      [ngClass]="{'is-invalid': (ram.touched || newRefurbForm.submitted) && !ram.valid, 'is-valid': ram.valid}"
+      [readonly]="loading" id="ram" name="ram"
+      type="number" required min="0" max="64" class="form-control" placeholder="How much memory (RAM) does it have, in gigabytes? (example: 3.5)">
+      <i class="form-group__bar"></i>
+    </div>
+    <span class="input-group-addon" style="width: 50px">GB</span>
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon"><i class="fa fa-hdd-o" aria-hidden="true"></i>&nbsp;&nbsp;Storage</span>
+    <div class="form-group">
+      <input [(ngModel)]="refurb.storage" #storage="ngModel"
+      [ngClass]="{'is-invalid': (storage.touched || newRefurbForm.submitted) && !storage.valid, 'is-valid': storage.valid}"
+      [readonly]="loading" id="storage" name="storage"
+      type="number" required min="10" max="10000" class="form-control" placeholder="How much space does the main drive have, in gigabytes (example: 250)">
+      <i class="form-group__bar"></i>
+    </div>
+    <span class="input-group-addon" style="width: 50px">GB</span>
+  </div>
+  <div class="input-group">
+    <span class="input-group-addon"><i class="fa fa-download" aria-hidden="true"></i>&nbsp;&nbsp;Storage Type</span>
+    <div class="form-group form-group--select">
+      <div class="select">
+        <select class="form-control" required [(ngModel)]="refurb.storageType" #storageType="ngModel"
+        [ngClass]="{'is-invalid': (storageType.touched || newRefurbForm.submitted) && !storageType.valid, 'is-valid': storageType.valid}"
+        [disabled]="loading" name="storageType">
+          <option value="" disabled selected>Is it a normal Hard Drive or a Solid State Drive?</option>
+          <option value="0">Hard Drive (HDD)</option>
+          <option value="1">Solid State Drive (SSD)</option>
+        </select>
+        <i class="form-group__bar"></i>
+      </div>
+    </div>
+  </div>
+  <br>
+  <label class="custom-control custom-checkbox" *ngIf="submitVerb === 'Create'">
+      <input type="checkbox" #softwareCheck class="custom-control-input"
+      [ngClass]="{'is-invalid': newRefurbForm.submitted && !softwareCheck.checked, 'is-valid': softwareCheck.checked}">
+      <span class="custom-control-indicator"></span>
+      <span class="custom-control-description">All standard software and current updates have been installed.</span>
+      <br><br>
+  </label>
+  <ng-container *ngIf="submitVerb === 'Verify'">
+    <h4>Verification</h4>
+    <label class="custom-control custom-checkbox">
+        <input type="checkbox" #verifyInfoCheck class="custom-control-input"
+        [ngClass]="{'is-invalid': newRefurbForm.submitted && !verifyInfoCheck.checked, 'is-valid': verifyInfoCheck.checked}">
+        <span class="custom-control-indicator"></span>
+        <span class="custom-control-description">I have booted up the system and verified that all of the above information is correct, making changes where necessary.</span>
+    </label>
+    <br>
+    <label class="custom-control custom-checkbox">
+        <input type="checkbox" #verifySoftwareCheck class="custom-control-input"
+        [ngClass]="{'is-invalid': newRefurbForm.submitted && !verifySoftwareCheck.checked, 'is-valid': verifySoftwareCheck.checked}">
+        <span class="custom-control-indicator"></span>
+        <span class="custom-control-description">I have verified that all standard software and current updates have been installed.</span>
+    </label>
+    <br><br>
+    <label class="custom-control custom-radio">
+      <input id="noMistakes" name="mistakes" value="no" #noMistakes type="radio" class="custom-control-input" [(ngModel)]="mistakeStatus"
+      [ngClass]="{'is-invalid': newRefurbForm.submitted && !mistakeStatus, 'is-valid': noMistakes.checked}">
+      <span class="custom-control-indicator"></span>
+      <span class="custom-control-description">No major mistakes were made in the original submission</span>
+    </label>
+    <label class="custom-control custom-radio">
+      <input id="someMistakes" type="radio" value="yes" #someMistakes name="mistakes" class="custom-control-input" [(ngModel)]="mistakeStatus"
+      [ngClass]="{'is-invalid': newRefurbForm.submitted && !mistakeStatus, 'is-valid': someMistakes.checked}">
+      <span class="custom-control-indicator"></span>
+      <span class="custom-control-description">One or more major mistakes had to be corrected</span>
+    </label>
+    <br>
+    <div class="form-group" *ngIf="someMistakes.checked">
+      <textarea [(ngModel)]="mistakeDescriptionValue" autosize #mistakeDescription="ngModel" class="form-control" style="border-width: 1px; border-style: dashed;" required minlength="15" maxlength="500"
+      [ngClass]="{'is-invalid': (mistakeDescription.touched || newRefurbForm.submitted) && !mistakeDescription.valid, 'is-valid': mistakeDescription.valid}"
+      placeholder="To help improve future submission quality, please describe the mistake(s) you found and what you did to correct it, with at least 15 characters."
+      name="mistakeDescription"></textarea>
+      <i class="form-group__bar"></i>
+    </div>
+  </ng-container>
+  <br>
+  <button [disabled]="loading" type="submit" class="btn btn-primary">{{ submitVerb }} Refurb</button> <i *ngIf="loading" class="zmdi zmdi-hc-lg zmdi-spinner"></i>
+  <span *ngFor="let error of serverErrors" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+</form>

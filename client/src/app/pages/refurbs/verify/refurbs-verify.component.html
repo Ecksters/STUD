@@ -1,0 +1,24 @@
+<section class="content">
+    <header class="content__title">
+      <h1>Verify Refurbs</h1>
+      <small>Verify the work done by others outside your Section to ensure it's ready for donation.</small>
+      <div class="actions">
+          <context-section></context-section>
+      </div>
+    </header>
+    <div class="alert alert-warning" role="alert" *ngIf="!sharedService.sectionSelected">
+        You must select a Section at the top right before you can see refurbs to verify.
+    </div>
+    <ng-container *ngIf="sharedService.sectionSelected">
+      <refurbs-list status="unverified" (refurbSelected)="selectRefurb($event)"></refurbs-list>
+      <div class="card" *ngIf="refurb">
+        <div class="card-body">
+          <div class="row">
+            <div class="col-sm-12">
+              <refurbs-form-standard [refurb]="refurb"></refurbs-form-standard>
+            </div>
+          </div>
+        </div>
+      </div>
+  </ng-container>
+</section>

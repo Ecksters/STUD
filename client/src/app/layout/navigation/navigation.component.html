@@ -1,0 +1,55 @@
+<aside class="sidebar" [class.toggled]="sidebarVisible">
+    <perfect-scrollbar>
+
+        <div class="user" dropdown [autoClose]="false">
+            <div class="user__info" dropdownToggle>
+                <img class="user__img" [src]="avatarURL" alt="">
+                <div>
+                    <div class="user__name">{{ sharedService.user.name }}</div>
+                    <div class="user__email">{{ sharedService.user.email }}</div>
+                </div>
+            </div>
+
+            <div *dropdownMenu class="dropdown-menu dropdown-menu-right">
+                <a class="dropdown-item" [routerLink]="['/users/profile/' + sharedService.user.id]"><i class="zmdi zmdi-account zmdi-hc-2x"></i> Profile and Settings</a>
+                <a class="dropdown-item" (click)="toggleStayLoggedIn()" *ngIf="sharedService.checkPermissions(0, role.LocationAdmin, level.System)">
+                    <div class="toggle-switch">
+                        <input type="checkbox" (click)="toggleStayLoggedIn(false)" class="toggle-switch__checkbox" [checked]="sharedService.stayLoggedIn" #stayLoggedIn>
+                        <i class="toggle-switch__helper" style="margin-top: .45em"></i>
+                    </div>
+                    Stay Signed In <i *ngIf="toggleStayLoggedInLoading" class="zmdi zmdi-spinner"></i>
+                </a>
+                <a class="dropdown-item" (click)="usersService.logout()"><i class="zmdi zmdi-sign-in zmdi-hc-2x"></i> Logout</a>
+            </div>
+        </div>
+
+        <ul class="navigation">
+            <li routerLinkActive="navigation__active"><a routerLink="/summary"><i class="zmdi zmdi-assignment"></i> Summary</a></li>
+            <li routerLinkActive="navigation__sub--active" class="navigation__sub">
+                <a (click)="toggleNavigationSub('Refurbs', $event)"><i class="zmdi zmdi-desktop-windows"></i> Refurbs</a>
+
+                <ul [@toggleHeight]="navigationSubState.Refurbs">
+                    <li routerLinkActive="navigation__active"><a routerLink="/refurbs/submit">Submit New Refurb</a></li>
+                    <li routerLinkActive="navigation__active"><a routerLink="/refurbs/verify">Verify Refurbs</a></li>
+                    <li routerLinkActive="navigation__active"><a routerLink="/refurbs/view">Ready to Donate</a></li>
+                    <li routerLinkActive="navigation__active"><a routerLink="/refurbs/donations">Past Donations</a></li>
+                </ul>
+            </li>
+            <li routerLinkActive="navigation__active" class="navigation__sub">
+                <a routerLink="/leaderboards/location"><i class="zmdi zmdi-star"></i> Leaderboards</a>
+            </li>
+            <li routerLinkActive="navigation__sub--active" class="navigation__sub" *ngIf="sharedService.checkPermissions(0, role.SectionMod, level.System)">
+                <a (click)="toggleNavigationSub('Administration', $event)"><i class="zmdi zmdi-lock"></i> Administration</a>
+
+                <ul [@toggleHeight]="navigationSubState.Administration">
+                    <li *ngIf="sharedService.checkPermissions(0, role.SystemAdmin, level.System)"routerLinkActive="navigation__active"><a [routerLink]="['/administration/system']">System</a></li>
+                    <li *ngIf="sharedService.checkPermissions(0, role.RegionAdmin, level.System)" routerLinkActive="navigation__active"><a [routerLink]="['/administration/region']">Region</a></li>
+                    <li *ngIf="sharedService.checkPermissions(0, role.LocationAdmin, level.System)" routerLinkActive="navigation__active"><a [routerLink]="['/administration/location']">Location</a></li>
+                    <li *ngIf="sharedService.checkPermissions(0, role.LocationAdmin, level.System)" routerLinkActive="navigation__active"><a [routerLink]="['/administration/section']">Section</a></li>
+                    <li *ngIf="sharedService.checkPermissions(0, role.SectionMod, level.System)" routerLinkActive="navigation__active"><a [routerLink]="['/administration/moderation']">Moderation</a></li>
+                </ul>
+            </li>
+            <!-- <li routerLinkActive="navigation__active"><a [routerLink]="['/calendar']"><i class="zmdi zmdi-lock"></i> Administration</a></li> -->
+        </ul>
+    </perfect-scrollbar>
+</aside>

@@ -1,0 +1,38 @@
+<button *ngIf="showButton"  type="button" class="btn btn-info btn-lg" (click)="openModal(loginModal)">Log In</button>
+
+<ng-template #loginModal>
+  <div class="modal-header">
+    <h4 class="modal-title pull-left">Log In</h4>
+    <button type="button" class="close pull-right" aria-label="Close" (click)="modalRef.hide()">
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    <div class="row">
+      <div class="col-sm-12">
+        <form (ngSubmit)="loginForm.valid && login(loginForm)" novalidate #loginForm="ngForm">
+          <div class="input-group">
+            <span class="input-group-addon"><i class="zmdi zmdi-account login__helper"></i></span>
+            <div class="form-group">
+              <input ngModel #email="ngModel"
+              email [ngClass]="{'is-invalid': (email.touched || loginForm.submitted) && !email.valid}"
+              [readonly]="loading" id="email" name="email" type="text" class="form-control" placeholder="Email Address">
+              <i class="form-group__bar"></i>
+            </div>
+          </div>
+          <div class="input-group">
+            <span class="input-group-addon"><i class="zmdi zmdi-lock login__helper"></i></span>
+            <div class="form-group">
+              <input ngModel #password="ngModel"
+              required [ngClass]="{'is-invalid': (password.touched || loginForm.submitted) && !password.valid}"
+              [readonly]="loading" id="password" name="password" type="password" class="form-control" placeholder="Password">
+              <i class="form-group__bar"></i>
+            </div>
+          </div><br>
+          <button [disabled]="loading" type="submit" class="btn btn-primary">Submit</button> <i *ngIf="loading" class="zmdi zmdi-spinner"></i>
+          <span style="margin: 2px;" [hidden]="!(loginForm.submitted && !loginForm.valid)" class="badge badge-danger">{{ errorMsg }}</span>
+        </form>
+      </div>
+    </div>
+  </div>
+</ng-template>
