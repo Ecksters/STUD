@@ -1,3 +1,4 @@
+import { TeamsModule } from './../teams/teams.module';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { UserRolesComponent } from './../user-components/user-roles/user-roles.component';
 import { MomentModule } from 'angular2-moment';
@@ -26,6 +27,7 @@ const HOME_ROUTE = [
         NgxDatatableModule,
         SharedModule,
         FormsModule,
+        TeamsModule,
         RouterModule.forChild(HOME_ROUTE)
     ]
 })

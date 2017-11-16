@@ -1,0 +1,64 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">Create New Team</h4>
+    <div class="row">
+      <div class="col-sm-12" *ngIf="userData; else loading">
+        <div class="input-group" id="sectionSelectorInput">
+          <span class="input-group-addon" style="width: 120px;"><i class="fa fa-sitemap" aria-hidden="true"></i>&nbsp;&nbsp;Section</span>
+          <div class="form-group form-group--select" style="border: 1px solid #eceff1">
+            <div class="select">
+              <select [(ngModel)]="sectionSelected" class="form-control" required (change)="selectSection(sectionSelector.value)"
+              #sectionSelector="ngModel" [ngClass]="{'is-invalid': sectionSelector.touched && !sectionSelector.valid, 'is-valid': sectionSelector.valid}">
+                <option value="" disabled>Select a Section</option>
+                <option *ngFor="let section of sections" [value]="section.id">{{section.name}}</option>
+              </select>
+              <i class="form-group__bar"></i>
+            </div>
+          </div>
+        </div>
+        <div class="input-group">
+          <span class="input-group-addon" style="width: 120px;"><i class="zmdi zmdi-hc-lg zmdi-accounts"></i>&nbsp;&nbsp;Team Name</span>
+          <div class="form-group">
+            <input [(ngModel)]="newTeamName" #teamName="ngModel"
+            id="teamName" name="teamName" [readonly]="submitting"
+            [ngClass]="{'is-invalid': teamName.touched && !teamName.valid, 'is-valid': teamName.valid}"
+            type="text" required minlength="4" maxlength="15" class="form-control" [placeholder]="'New Team Name'">
+            <i class="form-group__bar"></i>
+          </div>
+          <div *ngIf="!teamName.valid && teamName.touched">
+              <span *ngFor="let error of system.getPrettyErrors(teamName.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+          </div>
+        </div>
+        <br>
+        <h5>Other Team Members:</h5>
+        <ngx-datatable *ngIf="users;else loading" class="material striped"
+        [rowHeight]="40"
+        [columnMode]="'force'"
+        [rows]="users"
+        [footerHeight]="40"
+        [scrollbarV]="true"
+        [selected]="selected"
+        [selectionType]="'checkbox'">
+          <ngx-datatable-column
+          [width]="30"
+          [sortable]="false"
+          [canAutoResize]="false"
+          [draggable]="false"
+          [resizeable]="false"
+          [headerCheckboxable]="true"
+          [checkboxable]="true">
+          </ngx-datatable-column>
+          <ngx-datatable-column prop="name"></ngx-datatable-column>
+        </ngx-datatable>
+        <br>
+        <button [disabled]="submitting" (click)="createTeam()" class="btn btn-primary">Create Team</button> <i *ngIf="submitting" class="zmdi zmdi-hc-lg zmdi-spinner"></i>
+        <span *ngFor="let error of serverErrors" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+      </div>
+      <ng-template #loading>
+        <div class="col-sm-12">
+          Loading User Data... <i class="zmdi zmdi-hc-lg zmdi-spinner"></i>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -32,14 +32,19 @@ $loader->registerDirs(
 $di = new \Phalcon\DI\FactoryDefault();
 
 // Setup the database service
-$di->setShared('db', new DbAdapter(
-        [
-            'host'     => 'localhost',
-            'username' => 'root',
-            'password' => '',
-            'dbname'   => 'stud',
-        ])
-);
+try {
+  $di->setShared('db', new DbAdapter(
+          [
+              'host'     => 'localhost',
+              'username' => 'root',
+              'password' => '',
+              'dbname'   => 'stud',
+          ])
+  );
+}
+catch(Exception $error) {
+  throw new ErrorException('DB Error: Could not connect to database, ask System Administrator for support.', 500, 10);
+}
 
 $di->setShared('modelsManager', new ModelsManager());
 
@@ -149,11 +154,16 @@ $section->post('/disable', 'disableLevel');
 $section->post('/getAccessCodes', 'getAccessCodes');
 $section->post('/editAccessCode', 'editAccessCode');
 $section->post('/getUsers', 'getUsers');
+$section->post('/createTeam', 'createTeam');
+$section->post('/getTeams', 'getTeams');
 $app->mount($section);
 $permissions['SectionController'] = [
     'default_role' => ROLE_LOCATIONADMIN,
     'default_level' => LEVEL_SECTION,
-    'disableLevel' => ROLE_LOCATIONADMIN
+    'disableLevel' => ROLE_LOCATIONADMIN,
+    'getUsers' => ROLE_RESTRICTED,
+    'getTeams' => ROLE_RESTRICTED,
+    'createTeam' => ROLE_USER
 ];
 
 $app->notFound(
@@ -163,46 +173,52 @@ $app->notFound(
 );
 
 $app->before(function() use ($app, $permissions) {
-    if(stripos($app->request->getServer('CONTENT_TYPE'), 'json') !== false){ //Decode JSON requests in POST
-        $_POST = json_decode($app->request->getRawBody(), true);    
-    }
+  if(stripos($app->request->getServer('CONTENT_TYPE'), 'json') !== false){ //Decode JSON requests in POST
+      $_POST = json_decode($app->request->getRawBody(), true);    
+  }
 
-    $roles = $app->session->get('user');
-    $roles = isset($roles['roles']) ? $roles['roles'] : ROLE_GUEST;
-    $handler = $app->getActiveHandler();
-    $controller = $handler[0]->getDefinition();
-    $route = $handler[1];
-    $contexts = isset($permissions[$controller]['default_level']) &&
-           $permissions[$controller]['default_level'] === LEVEL_SYSTEM ? [0] : $app->request->getPost('context');
-    
-    if($permissions[$controller] === ROLE_GUEST ||
-            (isset($permissions[$controller][$route]) && $permissions[$controller][$route]  === ROLE_GUEST)) {
-        return true; //Let guests through
+  $roles = $app->session->get('user');
+  $roles = isset($roles['roles']) ? $roles['roles'] : ROLE_GUEST;
+  $handler = $app->getActiveHandler();
+  $controller = $handler[0]->getDefinition();
+  $route = $handler[1];
+  $contexts = isset($permissions[$controller]['default_level']) &&
+         $permissions[$controller]['default_level'] === LEVEL_SYSTEM ? [0] : $app->request->getPost('context');
+
+  if($permissions[$controller] === ROLE_GUEST ||
+          (isset($permissions[$controller][$route]) && $permissions[$controller][$route]  === ROLE_GUEST)) {
+      return true; //Let guests through
+  }
+
+  $toCheck;
+  if(isset($permissions[$controller][$route])) { //Route has specific permissions required
+    if(is_array($permissions[$controller][$route])) { // Specific access role at specific level required with context
+      $toCheck = [$permissions[$controller][$route][0], $permissions[$controller][$route][1], $contexts];
+    } else {  // Route only requires minimum role within contexts, at default level
+      $toCheck = [$permissions[$controller][$route], $permissions[$controller]['default_level'], $contexts];
     }
-     
-    $toCheck;
-    if(isset($permissions[$controller][$route])) { //Route has specific permissions required
-      if(is_array($permissions[$controller][$route])) { // Specific access role at specific level required with context
-        $toCheck = [$permissions[$controller][$route][0], $permissions[$controller][$route][1], $contexts];
-      } else {  // Route only requires minimum role within contexts, at default level
-        $toCheck = [$permissions[$controller][$route], $permissions[$controller]['default_level'], $contexts];
-      }
-    } else { // Default required access, with contexts, at the default level
-      $toCheck = [$permissions[$controller]['default_role'], $permissions[$controller]['default_level'], $contexts];
-    }
-    
-    if(!is_array($toCheck[2])) {
-      throw new ErrorException('Insufficient Permissions to access: ' . $app->request->getMethod() .
-              ' ' . $app->request->getURI() . ', invalid context(s) provided: ' . var_export($contexts, true), 403, 10);
-    }
-    
-    foreach($toCheck[2] as $context) {
+  } else { // Default required access, with contexts, at the default level
+    $toCheck = [$permissions[$controller]['default_role'], $permissions[$controller]['default_level'], $contexts];
+  }
+
+  if(!is_array($toCheck[2])) {
+    throw new ErrorException('Insufficient Permissions to access: ' . $app->request->getMethod() .
+            ' ' . $app->request->getURI() . ', invalid context(s) provided: ' . var_export($contexts, true), 403, 10);
+  }
+
+  foreach($toCheck[2] as $context) {
+    try{
       if(!$app->permission->check($context, $toCheck[0], $toCheck[1])) {
-        throw new ErrorException('Insufficient Permissions to access: ' . $app->request->getMethod() . ' ' . $app->request->getURI() .
-                                 ', check failed on context ID: ' . $context . ', Role: ' . $toCheck[0] . ', and Level: ' . $toCheck[1], 403, 10);
+        throw new ErrorException();
       }
     }
-    return true; //Passed all checks on all contexts provided
+    catch(Exception $error) {
+      throw $error; //Remove this in Production
+      throw new ErrorException('Insufficient Permissions to access: ' . $app->request->getMethod() .
+            ' ' . $app->request->getURI() . ', invalid context(s) provided: ' . var_export($contexts, true), 403, 10);
+    }
+  }
+  return true; //Passed all checks on all contexts provided
 });
 
 try {
@@ -221,7 +237,7 @@ try {
         ]
       ]
     ], JSON_UNESCAPED_UNICODE);
-  throw $exception;
+  throw $exception; //DELETE THIS IN PRODUCTION
 }
 
 function exceptions_error_handler($severity, $message, $filename, $lineno) {

@@ -5,8 +5,6 @@ use Phalcon\Di;
 
 class UsersToRoles extends Model
 {
-  
-  
   // Step 1: Find out which sections they are in, assume User role for those sections, and work up adding them to the correct locations/regions for their sections.
   // Step 2: Find designated roles and add or overwrite roles, looking up child levels and cascading down to Section level
   // Final array is indexed by Role, within each role, an array indexed by Place ID, which contains the role in that place.

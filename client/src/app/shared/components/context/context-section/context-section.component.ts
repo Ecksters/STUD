@@ -1,6 +1,6 @@
 import { SystemMessageService } from './../../../services/systemMessage.service';
 import { SharedService, Role, Level } from './../../../services/shared.service';
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'context-section',
@@ -14,6 +14,8 @@ export class ContextSectionComponent {
   location;
   sectionSelected = '';
   sections = [];
+
+  @Output() sectionChange = new EventEmitter<any>();
 
   selectPlaceholder = 'Select a Section';
 
@@ -38,11 +40,18 @@ export class ContextSectionComponent {
     }
   }
 
+  selectRefurb(selection) {
+
+  }
+
   selectSection(section) {
     this.sharedService.sectionSelected = section;
+    this.sectionChange.emit(section);
     this.system.toastr.success('Selected the "' +
     this.sharedService.scope[this.region][this.location][section]
     .name + '" Section', 'Changed Section Focus');
-    this.sharedService.refreshCurrentRoute();
+    if (this.sectionChange.observers.length === 0) {
+      this.sharedService.refreshCurrentRoute();
+    }
   }
 }

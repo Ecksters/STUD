@@ -51,8 +51,8 @@ export class LevelService {
     '/' + this.level + '/editAccessCode', body);
   }
 
-  getUsers() {
-    const body = {context: [this.levelId]};
+  getUsers(level = this.levelId) {
+    const body = {context: [level]};
     return this.httpClient.post(window.location.protocol + '//' + window.location.hostname  + '/' + this.level + '/getUsers', body);
   }
 }

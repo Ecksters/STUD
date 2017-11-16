@@ -5,6 +5,9 @@ use Phalcon\Security\Random;
 
 class UsersController extends Controller {
   
+  public function testdb() {
+    return ['users' => Users::find()];
+  }
   
   public function setStayLoggedIn() {
     $newValue = (bool) $this->request->getPost('stayLoggedIn');
