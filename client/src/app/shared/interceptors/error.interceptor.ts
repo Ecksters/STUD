@@ -46,12 +46,15 @@ export class ErrorInterceptor implements HttpInterceptor {
       })
       .catch((error: any) => {
         console.log(`Waited for response from ${req.urlWithParams} for ${Date.now() - started} ms.`);
-        console.log('Error occured: ', JSON.stringify(error));
+        console.log('Error occured: ', error);
+        console.log(error.error, error.error.errors);
         if (error instanceof HttpErrorResponse) {
           if (error.headers.get('Content-Type') !== 'application/json; charset=UTF-8') {
             this.errorMessage = 'Non-JSON response, ask administrator for help.';
           } else if (error.error && error.error.errors) {
-            console.log('Server returned', error.error.errors[0].errorType, 'error, "' + error.error.errors[0].message + '"');
+            const errors = error.error.errors;
+            this.errorMessage = 'Server returned ' + errors[0].errorType + ' error, "' + errors[0].message + '"';
+            console.log('Server returned', errors[0].errorType, 'error, "' + errors[0].message + '"');
           } else if (error.status === 200) {
               this.errorMessage = 'Server returned empty response';
           }

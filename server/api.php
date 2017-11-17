@@ -234,10 +234,15 @@ try {
           'errorType' => 'system',
           'code'    => 500,
           'message' => $exception->getMessage()
+        ],
+        [
+          'errorType' => 'internal',
+          'code' => $exception->getCode(),
+          'location' => $exception->getFile() . ' on line ' . $exception->getLine(),
+          'trace' => $exception->getTraceAsString()
         ]
       ]
     ], JSON_UNESCAPED_UNICODE);
-  throw $exception; //DELETE THIS IN PRODUCTION
 }
 
 function exceptions_error_handler($severity, $message, $filename, $lineno) {
