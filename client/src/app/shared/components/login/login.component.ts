@@ -43,8 +43,8 @@ export class LoginComponent {
       this.loading = false;
     }).subscribe(
     (results: any) => {
-      this.sharedService.initializeRoles(results);
       if (results.authenticated) {
+        this.sharedService.initializeRoles(results);
         this.router.navigate(['/']);
         this.modalRef.hide();
       } else {

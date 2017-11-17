@@ -97,9 +97,7 @@ export class SharedService {
     initializeRoles(results: Array<any>) {
       console.log(results['user'].scope);
       this.authenticated = results['authenticated'];
-      this.user.id = results['user'].id;
-      this.user.name = results['user'].name;
-      this.user.email = results['user'].email;
+      this.user = { id: results['user'].id, name: results['user'].name, email: results['user'].email };
       this.roles = results['user'].roles;
       this.scope = results['user'].scope;
 

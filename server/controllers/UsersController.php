@@ -4,11 +4,6 @@ use Phalcon\Mvc\Controller;
 use Phalcon\Security\Random;
 
 class UsersController extends Controller {
-  
-  public function testdb() {
-    return ['users' => Users::find()];
-  }
-  
   public function setStayLoggedIn() {
     $newValue = (bool) $this->request->getPost('stayLoggedIn');
     $this->session->set('stayLoggedIn', $newValue);
@@ -17,7 +12,7 @@ class UsersController extends Controller {
   
   public function checkLogin() {
     $user = $this->session->get('user');
-    if ($this->session->get('stayLoggedIn') && $user) {
+    if ($this->session->get('stayLoggedIn') && isset($user)) {
       $this->permission->updatePermissions();
       return $this->getCredentials();
     } else {
@@ -26,8 +21,11 @@ class UsersController extends Controller {
   }
   
   public function getPermissions() {
-    if ($this->session->get('user')) {
-      return $this->getCredentials();
+    $currentUser = $this->session->get('user');
+    if (isset($currentUser)) {
+      $user = Users::findFirstById($currentUser['id']);
+      $auth = Authentication::findFirstById($currentUser['id']);
+      return $this->setLoggedIn($user, $auth);
     } else {
       return ['authenticated' => false];
     }
@@ -122,13 +120,25 @@ class UsersController extends Controller {
   public function updateUser() {
     $id = $this->request->getPost('id', 'int');
     $roles = UsersToRoles::getRolesAndScope($id)['roles'];
+    $currentUser = $this->session->get('user');
     
     if ($this->checkAuthority($id, $roles)) {
       $auth = Authentication::findFirstById($id);
-      $user = Users::findFirstById($id);
-      if ($auth->update($newAuth, ['email', 'password'])) {
-        return $accessCode;
+      if($currentUser['id'] == $id &&
+         !$this->security->checkHash($this->request->getPost('oldPassword', 'string') . 
+          'PepperBaby!OhYeah.', $auth->password)) {
+        return ['reason' => 'Current password was incorrect'];
       }
+      $user = Users::findFirstById($id);
+      if(!empty($this->request->getPost('newPassword', 'string'))) {
+        $newAuth['password'] = $this->security->hash($this->request->getPost('newPassword', 'string')
+              . 'PepperBaby!OhYeah.');
+      }
+      $newAuth['name'] = $this->request->getPost('name', 'string');
+      $newAuth['email'] = $this->request->getPost('email', 'email');
+      $auth->update($newAuth, ['email', 'password']);
+      $user->update($newAuth, ['name']);
+      return ['user' => $user];
     }
     throw new ErrorException('Insufficient Permissions to view user information', 403, 10);
   }
