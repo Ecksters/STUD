@@ -129,12 +129,14 @@ class UsersController extends Controller {
           'PepperBaby!OhYeah.', $auth->password)) {
         return ['reason' => 'Current password was incorrect'];
       }
+      else {
+        $newAuth['name'] = $this->request->getPost('name', 'string');
+      }
       $user = Users::findFirstById($id);
       if(!empty($this->request->getPost('newPassword', 'string'))) {
         $newAuth['password'] = $this->security->hash($this->request->getPost('newPassword', 'string')
               . 'PepperBaby!OhYeah.');
       }
-      $newAuth['name'] = $this->request->getPost('name', 'string');
       $newAuth['email'] = $this->request->getPost('email', 'email');
       $auth->update($newAuth, ['email', 'password']);
       $user->update($newAuth, ['name']);

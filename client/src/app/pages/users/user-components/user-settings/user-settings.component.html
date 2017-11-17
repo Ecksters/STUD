@@ -10,7 +10,7 @@
                 <div class="form-group">
                   <input [ngModel]="userData.user.name" #updateUserName="ngModel"
                   [ngClass]="{'is-invalid': (updateUserName.touched || updateUserForm.submitted) && !updateUserName.valid, 'is-valid': updateUserName.touched && updateUserName.valid}"
-                  [readonly]="loading" id="updateUserName" name="updateUserName"
+                  [readonly]="loading || !admin" id="updateUserName" name="updateUserName"
                   type="text" required minlength="2" class="form-control" [placeholder]="'User Full Name'">
                   <i class="form-group__bar"></i>
                 </div>
@@ -31,19 +31,6 @@
                     <span *ngFor="let error of system.getPrettyErrors(updateUserEmail.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
                 </div>
               </div>
-              <div class="input-group" *ngIf="!admin && userData.user.id != sharedService.user.id">
-                <span class="input-group-addon" style="width: 150px"><i class="zmdi zmdi-hc-lg zmdi-lock-open"></i>&nbsp;&nbsp;Current Password</span>
-                <div class="form-group">
-                  <input ngModel #updateUserPasswordOld="ngModel"
-                  [ngClass]="{'is-invalid': (updateUserPasswordOld.touched || updateUserForm.submitted) && !updateUserPasswordOld.valid, 'is-valid': updateUserPasswordOld.valid && updateUserPasswordOld.touched}"
-                  [readonly]="loading" id="updateUserPasswordOld" name="updateUserPasswordOld" [placeholder]="'Current Password'"
-                  type="password" minlength="6" class="form-control">
-                  <i class="form-group__bar"></i>
-                </div>
-                <div *ngIf="!updateUserForm.valid && (updateUserForm.submitted || updateUserEmail.touched)">
-                    <span *ngFor="let error of system.getPrettyErrors(updateUserEmail.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
-                </div>
-              </div>
               <div class="input-group">
                 <span class="input-group-addon" style="width: 150px"><i class="zmdi zmdi-hc-lg zmdi-lock"></i>&nbsp;&nbsp;New Password</span>
                 <div class="form-group">
@@ -53,8 +40,8 @@
                   type="password" minlength="6" class="form-control">
                   <i class="form-group__bar"></i>
                 </div>
-                <div *ngIf="!updateUserForm.valid && (updateUserForm.submitted || updateUserEmail.touched)">
-                    <span *ngFor="let error of system.getPrettyErrors(updateUserEmail.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+                <div *ngIf="!updateUserForm.valid && (updateUserForm.submitted || updateUserPasswordNew.touched)">
+                    <span *ngFor="let error of system.getPrettyErrors(updateUserPasswordNew.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
                 </div>
               </div>
               <div class="input-group">
@@ -66,12 +53,26 @@
                   type="password" minlength="6" class="form-control">
                   <i class="form-group__bar"></i>
                 </div>
-                <div *ngIf="!updateUserForm.valid && (updateUserForm.submitted || updateUserEmail.touched)">
-                    <span *ngFor="let error of system.getPrettyErrors(updateUserEmail.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+                <div *ngIf="!updateUserForm.valid && (updateUserForm.submitted || updateUserPasswordRepeat.touched)">
+                    <span *ngFor="let error of system.getPrettyErrors(updateUserPasswordRepeat.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
                 </div>
               </div>
               <br>
-              <button *ngIf="updateUserForm.touched" [disabled]="loading || !(updateUserPasswordNew.value === updateUserPasswordRepeat.value)" type="submit" class="btn btn-primary">Update Information</button> <i *ngIf="loading" class="zmdi zmdi-hc-lg zmdi-spinner"></i>
+              <div class="input-group" *ngIf="!admin || userData.user.id == sharedService.user.id">
+                <span class="input-group-addon" style="width: 150px"><i class="zmdi zmdi-hc-lg zmdi-lock-open"></i>&nbsp;&nbsp;Current Password</span>
+                <div class="form-group">
+                  <input ngModel #updateUserPasswordOld="ngModel"
+                  [ngClass]="{'is-invalid': (updateUserPasswordOld.touched || updateUserForm.submitted) && !updateUserPasswordOld.valid, 'is-valid': updateUserPasswordOld.valid && updateUserPasswordOld.touched}"
+                  [readonly]="loading" id="updateUserPasswordOld" name="updateUserPasswordOld" [placeholder]="'Current Password (Required for all changes)'"
+                  type="password" required class="form-control">
+                  <i class="form-group__bar"></i>
+                </div>
+                <div *ngIf="!updateUserForm.valid && (updateUserForm.submitted || updateUserPasswordOld.touched)">
+                    <span *ngFor="let error of system.getPrettyErrors(updateUserPasswordOld.errors)" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
+                </div>
+              </div>
+              <br>
+              <button *ngIf="updateUserForm.touched" [disabled]="updateUserForm.invalid || loading || !(updateUserPasswordNew.value === updateUserPasswordRepeat.value)" type="submit" class="btn btn-primary">Update Information</button> <i *ngIf="loading" class="zmdi zmdi-hc-lg zmdi-spinner"></i>
               <span *ngFor="let error of serverErrors" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
             </form>
             <br>

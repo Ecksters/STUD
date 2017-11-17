@@ -41,12 +41,10 @@ export class UserSettingsComponent implements OnInit {
       if (results.user) {
         this.system.toastr.success('Updated ' + results.user.name + ' Successfully.',
         'User Updated');
-        this.sharedService.refreshCurrentRoute();
+        this.sharedService.refreshPermissions();
       } else {
         this.loading = false;
-        for (const error of results.reason) {
-          this.serverErrors.push(error.message);
-        }
+        this.serverErrors.push(results.reason || 'Error occured, please try again.');
       }
     },
     (error) => {
