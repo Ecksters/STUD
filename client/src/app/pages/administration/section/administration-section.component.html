@@ -12,6 +12,7 @@
   </div>
   <ng-container *ngIf="sharedService.sectionSelected">
     <level-info [context]="context"></level-info>
+    <level-team-list [context]="context"></level-team-list>
     <div class="card" *ngIf="context">
       <div class="card-body">
         <h4 class="card-title">Users within {{ context.levelProperName }}</h4>

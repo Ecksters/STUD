@@ -145,4 +145,41 @@ class LevelController extends Injectable {
     //var_dump($this->modelsManager->getLastQuery()->getSql());
     return $users->toArray();
   }
+  
+  public function getTeams() {
+    $teams = $this->modelsManager->executeQuery("
+    SELECT UsersToTeams.user, UsersToTeams.team, Users.name as member, Teams.created, Teams.name, Teams.active, Teams.approved,
+    Sections.id as section, Locations.id as location, Regions.id as region
+    FROM UsersToTeams
+    INNER JOIN Teams on UsersToTeams.team = Teams.id
+    INNER JOIN Users on UsersToTeams.user = Users.id
+    LEFT JOIN Sections ON Teams.section = Sections.id
+    LEFT JOIN Locations ON Sections.location = Locations.id
+    LEFT JOIN Regions ON Locations.region = Regions.id
+    WHERE (Teams.active = 1 OR Teams.approved = 0) AND " . $this->LevelClass . ".id IN (" . implode(',',$this->request->getPost('context')) .
+      ") AND Regions.active = 1 AND Locations.active = 1 AND Sections.active = 1
+    ORDER BY region, location, section, Teams.name, Teams.id");
+    
+    $levelTeams = [];
+    $currentRow = NULL;
+    $index = -1;
+    foreach($teams as $teamRow) {
+      if($teamRow->team !== $currentRow) {
+        $currentRow = $teamRow->team;
+        $levelTeams[] = [
+            'id' => $teamRow->team,
+            'name' => $teamRow->name,
+            'active' => $teamRow->active,
+            'approved' => $teamRow->approved,
+            'created' => $teamRow->created,
+            'section' => $teamRow->section,
+            'location' => $teamRow->location,
+            'region' => $teamRow->region
+        ];
+        $index++;
+      }
+      $levelTeams[$index]['members'][] = ['id' => $teamRow->user, 'name' => $teamRow->member];
+    }
+    return $levelTeams;
+  }
 }

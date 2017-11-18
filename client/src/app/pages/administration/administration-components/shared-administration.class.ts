@@ -20,6 +20,8 @@ export class SharedAdministration {
 
   accessCodes: any;
 
+  teams: any;
+
   constructor(public levelService: LevelService, public sharedService: SharedService) {
     this.levelName = levelService.level;
     this.levelProperName = sharedService.capitalize(levelService.level);
@@ -51,6 +53,9 @@ export class SharedAdministration {
       if (levelIndex > 0) {
         this.childName = LevelService.levels[levelIndex - 1];
         this.childProperName = sharedService.capitalize(this.childName);
+      }
+      if (this.levelName !== 'system') {
+        levelService.getTeams().subscribe((result: any) => this.teams = result);
       }
 
       levelService.getAccessCodes().subscribe((result: any) => this.accessCodes = result);

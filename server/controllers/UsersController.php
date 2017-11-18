@@ -108,11 +108,23 @@ class UsersController extends Controller {
     $scope = &$rolesAndScope['scope'];
     
     if($this->checkAuthority($id, $roles)) {
-      $user = Users::findFirstById($id)->toArray();
+      $user = Users::findFirstById($id);
+      $teamsFromUser = $user->getTeams('active = 1 OR approved = 0');
+      $teams = [];
+      foreach($teamsFromUser as $index => $team) {
+        $teams[$index] = $team->toArray();
+        $teams[$index]['section'] = ['id' => $team->section, 'name' => $team->parentSection->name];
+        $members = $team->users;
+        $teams[$index]['members'] = [];
+        foreach($members as $member) {
+          $teams[$index]['members'][] = ['id' => $member->id, 'name' => $member->name];
+        }
+      }
       $userAuth = Authentication::findFirstById($id);
+      $user = $user->toArray();
       $user['email'] = $userAuth->email;
       $roleList = UsersToRoles::findByUser($id)->toArray();
-      return ['user' => $user, 'roles' => $roles, 'scope' => $scope, 'roleList' => $roleList];
+      return ['user' => $user, 'teams' => $teams, 'roles' => $roles, 'scope' => $scope, 'roleList' => $roleList];
     }
     throw new ErrorException('Insufficient Permissions to view user information', 403, 10);
   }

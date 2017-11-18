@@ -1,0 +1,35 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">Team Membership</h4>
+    <div class="row">
+      <div class="col-sm-12">
+        <ngx-datatable #teamList *ngIf="userData;else loading" class="material striped expandable"
+        [rowHeight]="40"
+        [columnMode]="'force'"
+        [rows]="userData.teams"
+        [messages]="{emptyMessage: 'Not currently on any teams'}"
+        [selectionType]="'single'"
+        (select)="toggleExpandRow($event)">
+          <ngx-datatable-row-detail [rowHeight]="40">
+            <ng-template let-row="row" ngx-datatable-row-detail-template>
+              <div><strong>Team Members: </strong>{{ memberNames(row.members) }}</div>
+            </ng-template>
+          </ngx-datatable-row-detail>
+          <ngx-datatable-column prop="name" name="Team Name"></ngx-datatable-column>
+          <ngx-datatable-column prop="section.name" name="Section"></ngx-datatable-column>
+          <ngx-datatable-column prop="members.length" name="Team Size"></ngx-datatable-column>
+          <ngx-datatable-column prop="approved" name="Status">
+            <ng-template let-row="row" ngx-datatable-cell-template>
+              {{ row.approved == '1' ? 'Active' : 'Pending Approval' }}
+            </ng-template>
+          </ngx-datatable-column>
+        </ngx-datatable>
+      </div>
+      <ng-template #loading>
+        <div class="col-sm-12">
+          Loading User Teams... <i class="zmdi zmdi-hc-lg zmdi-spinner"></i>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

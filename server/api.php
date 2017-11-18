@@ -121,6 +121,7 @@ $region->post('/getAccessCodes', 'getAccessCodes');
 $region->post('/editAccessCode', 'editAccessCode');
 $region->post('/location/create', 'createChild');
 $region->post('/getUsers', 'getUsers');
+$region->post('/getTeams', 'getTeams');
 $app->mount($region);
 $permissions['RegionController'] = [
     'default_role' => ROLE_REGIONADMIN,
@@ -138,6 +139,7 @@ $location->post('/getAccessCodes', 'getAccessCodes');
 $location->post('/editAccessCode', 'editAccessCode');
 $location->post('/section/create', 'createChild');
 $location->post('/getUsers', 'getUsers');
+$location->post('/getTeams', 'getTeams');
 $app->mount($location);
 $permissions['LocationController'] = [
     'default_role' => ROLE_LOCATIONADMIN,
@@ -155,6 +157,9 @@ $section->post('/getAccessCodes', 'getAccessCodes');
 $section->post('/editAccessCode', 'editAccessCode');
 $section->post('/getUsers', 'getUsers');
 $section->post('/createTeam', 'createTeam');
+$section->post('/acceptTeams', 'acceptTeams');
+$section->post('/rejectTeams', 'rejectTeams');
+$section->post('/retireTeams', 'retireTeams');
 $section->post('/getTeams', 'getTeams');
 $app->mount($section);
 $permissions['SectionController'] = [

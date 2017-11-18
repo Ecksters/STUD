@@ -55,4 +55,9 @@ export class LevelService {
     const body = {context: [level]};
     return this.httpClient.post(window.location.protocol + '//' + window.location.hostname  + '/' + this.level + '/getUsers', body);
   }
+
+  getTeams(level = this.levelId) {
+    const body = {context: [level]};
+    return this.httpClient.post(window.location.protocol + '//' + window.location.hostname  + '/' + this.level + '/getTeams', body);
+  }
 }

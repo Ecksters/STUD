@@ -6,7 +6,7 @@ use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
 class Regions extends Model
 {
   public function initialize(){
-    $this->hasMany('id', 'Locations', 'region');
+    $this->hasMany('id', 'Locations', 'region', ['alias' => 'children']);
   }
   
   public function validation()

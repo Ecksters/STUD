@@ -49,7 +49,6 @@
                       <ng-container *ngIf="hasExpired(context.accessCodes.children[row.id].expirationDate)">Expired </ng-container>
                       {{ context.accessCodes.children[row.id].expirationDate | amLocal | amTimeAgo }}<br>
                       on {{ context.accessCodes.children[row.id].expirationDate | amLocal | amDateFormat:'LL' }}
-
                   </ng-template>
                   <br>
                   {{ context.accessCodes.children[row.id].uses }} Use{{ context.accessCodes.children[row.id].uses !== '1' ? 's' : '' }} Remaining

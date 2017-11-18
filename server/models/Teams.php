@@ -5,6 +5,20 @@ use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
 
 class Teams extends Model
 {
+  public function initialize()
+  {
+    $this->hasManyToMany(
+      'id',
+      'UsersToTeams',
+      'team',
+      'user',
+      'Users',
+      'id',
+      ['alias' => 'users']
+    );
+    
+    $this->belongsTo('section', 'Sections', 'id', ['alias' => 'parentSection']);
+  }
   public function validation()
   {
     $validator = new Validation();

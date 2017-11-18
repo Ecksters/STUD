@@ -22,9 +22,6 @@ const HOME_ROUTE = [
         FormsModule,
         AdministrationModule,
         RouterModule.forChild(HOME_ROUTE)
-    ],
-    providers: [
-      SectionService
     ]
 })
 

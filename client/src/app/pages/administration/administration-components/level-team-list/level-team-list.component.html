@@ -1,0 +1,173 @@
+<div class="card">
+  <div class="card-body">
+    <h4 class="card-title">Teams within {{ context.levelProperName }}</h4>
+    <div class="row">
+      <div class="col-sm-12">
+        <ng-container *ngIf="context && teams && pending; else loading">
+          <ngx-datatable #teamList class="material striped" *ngIf="pending.length > 0; else noPending"
+            [rowHeight]="40"
+            [columnMode]="'force'"
+            [rows]="pending"
+            [footerHeight]="30"
+            [scrollbarV]="true"
+            [messages]="{totalMessage: 'teams in total'}"
+            [selected]="selectedPending"
+            [selectionType]="'checkbox'">
+              <ngx-datatable-column
+              [width]="30"
+              [sortable]="false"
+              [canAutoResize]="false"
+              [draggable]="false"
+              [resizeable]="false"
+              [headerCheckboxable]="true"
+              [checkboxable]="true">
+            </ngx-datatable-column>
+            <ngx-datatable-column prop="name" name="Team Name"></ngx-datatable-column>
+            <ngx-datatable-column prop="location" *ngIf="LevelService.levels[context.levelService.levelIndex] === 'region'">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                  <ng-container>
+                    {{ sharedService.scope[row.region][row.location].name }}
+                  </ng-container>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column prop="section" *ngIf="LevelService.levels[context.levelService.levelIndex] !== 'section'">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <ng-container>
+                  {{ sharedService.scope[row.region][row.location][row.section].name }}
+                </ng-container>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column prop="members.length" name="Team Size">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <a href="javascript:;" class="badge badge-pill badge-secondary" [outsideClick]="true"
+                [popover]="viewMembers" placement="top" container="body">
+                    {{ row.members.length }} Members <i class="zmdi zmdi-accounts"></i>
+                </a>
+                <ng-template #viewMembers>
+                  <div *ngFor="let member of row.members">
+                    <a style="padding: 0.3rem 0.3rem; width: 100%; text-align: left;" [routerLink]="'/users/profile/' + member.id"
+                    class="badge badge-dark">
+                      <i class="zmdi zmdi-account" style="pointer-events: none;"></i> {{ member.name }}
+                    </a>
+                  </div>
+                </ng-template>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Approval" [sortable]="false"
+            headerClass="text-center" cellClass="text-center">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <button type="button" class="btn btn-success btn-sm"
+                placement="left" container="body" [tooltip]="'Accept Team'"
+                (click)="acceptTeams(row)"><i class="zmdi zmdi-hc-lg zmdi-check" style="pointer-events: none;"></i></button>
+                <button type="button" class="btn btn-danger btn-sm"
+                placement="left" [tooltip]="'Reject Team'"
+                (click)="rejectTeams(row)"><i class="zmdi zmdi-hc-lg zmdi-delete" style="pointer-events: none;"></i></button>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-footer>
+              <ng-template
+                ngx-datatable-footer-template
+                let-rowCount="rowCount"
+                let-selectedCount="selectedCount">
+                  <div style="position: absolute; left: 15px;">
+                    {{ selectedCount }} selected of {{rowCount}} teams total
+                  </div>
+                  <div style="position: absolute; right: 15px;">
+                      <h6 style="display: inline-block; color: rgba(0, 0, 0, 0.54);">{{ selectedCount || '' }} Selected: </h6>
+                      <button type="button" class="btn btn-success btn-sm" [disabled]="selectedCount == 0" (click)="acceptTeams()">
+                          <i class="zmdi zmdi-check"></i> Accept
+                      </button>
+                      <button type="button" class="btn btn-danger btn-sm" [disabled]="selectedCount == 0" (click)="rejectTeams()">
+                        <i class="zmdi zmdi-delete"></i> Reject
+                      </button>
+                  </div>
+              </ng-template>
+            </ngx-datatable-footer>
+          </ngx-datatable>
+          <ng-template #noPending>
+              <div class="col-sm-12">
+                <div class="alert alert-success"><i class="zmdi zmdi-hc-lg zmdi-check"></i> There are no teams pending approval</div>
+              </div>
+          </ng-template>
+          <br><br>
+          <h5 class="card-title">Active Teams</h5>
+          <ngx-datatable #teamList class="material striped"
+            [rowHeight]="40"
+            [columnMode]="'force'"
+            [rows]="teams"
+            [footerHeight]="30"
+            [scrollbarV]="true"
+            [messages]="{emptyMessage: 'No teams currently approved and active within this ' + context.levelProperName + ', visit a user\'s profile to manually create one',
+                        totalMessage: 'teams in total'}"
+            [selected]="selectedActive"
+            [selectionType]="'checkbox'">
+              <ngx-datatable-column
+              [width]="30"
+              [sortable]="false"
+              [canAutoResize]="false"
+              [draggable]="false"
+              [resizeable]="false"
+              [headerCheckboxable]="true"
+              [checkboxable]="true">
+            </ngx-datatable-column>
+            <ngx-datatable-column prop="name" name="Team Name"></ngx-datatable-column>
+            <ngx-datatable-column prop="location" *ngIf="LevelService.levels[context.levelService.levelIndex] === 'region'">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                    {{ sharedService.scope[row.region][row.location].name }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column prop="section" *ngIf="LevelService.levels[context.levelService.levelIndex] !== 'section'">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                  {{ sharedService.scope[row.region][row.location][row.section].name }}
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column prop="members.length" name="Team Size">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <a href="javascript:;" class="badge badge-pill badge-secondary" [outsideClick]="true"
+                [popover]="viewMembers" placement="top" container="body">
+                    {{ row.members.length }} Members <i class="zmdi zmdi-accounts"></i>
+                </a>
+                <ng-template #viewMembers>
+                  <div *ngFor="let member of row.members">
+                    <a style="padding: 0.3rem 0.3rem; width: 100%; text-align: left;" [routerLink]="'/users/profile/' + member.id"
+                    class="badge badge-dark">
+                      <i class="zmdi zmdi-account" style="pointer-events: none;"></i> {{ member.name }}
+                    </a>
+                  </div>
+                </ng-template>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-column name="Retire" [sortable]="false"
+            headerClass="text-center" cellClass="text-center">
+              <ng-template let-row="row" ngx-datatable-cell-template>
+                <button type="button" class="btn btn-danger btn-sm"
+                placement="left" [tooltip]="'Retire Team'"
+                (click)="retireTeams(row)"><i class="zmdi zmdi-hc-lg zmdi-tag-close" style="pointer-events: none;"></i></button>
+              </ng-template>
+            </ngx-datatable-column>
+            <ngx-datatable-footer>
+              <ng-template
+                ngx-datatable-footer-template
+                let-rowCount="rowCount"
+                let-selectedCount="selectedCount">
+                  <div style="position: absolute; left: 15px;">
+                    {{ selectedCount }} selected of {{rowCount}} teams total
+                  </div>
+                  <div style="position: absolute; right: 15px;">
+                      <button type="button" class="btn btn-danger btn-sm" [disabled]="selectedCount == 0" (click)="retireTeams()">
+                        <i class="zmdi zmdi-tag-close"></i> Retire {{ selectedCount || '' }} Teams Selected
+                      </button>
+                  </div>
+              </ng-template>
+            </ngx-datatable-footer>
+          </ngx-datatable>
+        </ng-container>
+      </div>
+      <ng-template #loading>
+        <div class="col-sm-12">
+          Loading Teams... <i class="zmdi zmdi-hc-lg zmdi-spinner"></i>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

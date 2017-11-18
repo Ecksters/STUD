@@ -5,10 +5,12 @@ import { TeamCreateComponent } from './team-create/team-create.component';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { SharedModule } from '../../../shared/shared.module';
+import { TeamListComponent } from './team-list/team-list.component';
 
 @NgModule ({
     declarations: [
-        TeamCreateComponent
+        TeamCreateComponent,
+        TeamListComponent
     ],
     imports: [
         CommonModule,
@@ -20,7 +22,8 @@ import { SharedModule } from '../../../shared/shared.module';
       SectionService
     ],
     exports: [
-      TeamCreateComponent
+      TeamCreateComponent,
+      TeamListComponent
     ]
 })
 
