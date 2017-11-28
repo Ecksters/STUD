@@ -14,6 +14,9 @@ class RefurbsController extends Controller
     $refurbData['location'] = $sectionLineage->location;
     $refurbData['region'] = $sectionLineage->region;
     $refurbData['submitterSubmit'] = $this->session->get('user')['id'];
+    if(isset($refurbData['teamSubmit'])) {
+      $refurb->teamSubmit = $refurbData['teamSubmit'];
+    }
     
     $refurb = new Refurbs();
     if ($refurb->create($refurbData, ['region', 'location', 'sectionSubmit', 'submitterSubmit', 'teamSubmit',
@@ -59,6 +62,9 @@ class RefurbsController extends Controller
     $refurb->verified = date('Y-m-d H:i:s');
     $refurb->sectionVerify = $refurbData['sectionVerify'];
     $refurb->submitterVerify = $this->session->get('user')['id'];
+    if(isset($refurbData['teamVerify'])) {
+      $refurb->teamVerify = $refurbData['teamVerify'];
+    }
     if(isset($refurbData['teamVerify'])) {
       $refurb->teamVerify = $refurbData['teamVerify'];
     }

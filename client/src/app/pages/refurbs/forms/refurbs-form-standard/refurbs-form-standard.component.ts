@@ -21,6 +21,8 @@ export class RefurbsFormStandardComponent implements OnInit {
   @ViewChild('verifyInfoCheck') verifyInfoCheck: ElementRef;
   @ViewChild('verifySoftwareCheck') verifySoftwareCheck: ElementRef;
 
+  submitAsSelected = false;
+
   @Input() updating = false;
 
   @Input() refurb = {id: '', region: '', location: '',
@@ -55,6 +57,15 @@ export class RefurbsFormStandardComponent implements OnInit {
 
   capitalize(value) {
     this.refurb[value] = this.sharedService.capitalize(this.refurb[value]);
+  }
+
+  updateSubmitAs(submitAs) {
+    this.submitAsSelected = true;
+    if (this.refurb.id) { //Verifying
+      this.refurb.teamVerify = submitAs;
+    } else { //Submitting
+      this.refurb.teamSubmit = submitAs;
+    }
   }
 
   submitRefurb(form: NgForm) {

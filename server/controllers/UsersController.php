@@ -108,21 +108,10 @@ class UsersController extends Controller {
     $scope = &$rolesAndScope['scope'];
     
     if($this->checkAuthority($id, $roles)) {
-      $user = Users::findFirstById($id);
-      $teamsFromUser = $user->getTeams('active = 1 OR approved = 0');
-      $teams = [];
-      foreach($teamsFromUser as $index => $team) {
-        $teams[$index] = $team->toArray();
-        $teams[$index]['section'] = ['id' => $team->section, 'name' => $team->parentSection->name];
-        $members = $team->users;
-        $teams[$index]['members'] = [];
-        foreach($members as $member) {
-          $teams[$index]['members'][] = ['id' => $member->id, 'name' => $member->name];
-        }
-      }
       $userAuth = Authentication::findFirstById($id);
-      $user = $user->toArray();
+      $user = Users::findFirstById($id)->toArray();
       $user['email'] = $userAuth->email;
+      $teams = $this->getUserTeams($id);
       $roleList = UsersToRoles::findByUser($id)->toArray();
       return ['user' => $user, 'teams' => $teams, 'roles' => $roles, 'scope' => $scope, 'roleList' => $roleList];
     }
@@ -178,7 +167,10 @@ class UsersController extends Controller {
                   'name' => $user->name,
                   'id' => $user->id
                 ];
+    $userTeams = $this->getUserTeams($user->id);
+    
     $this->session->set('user', $userData);
+    $this->session->set('teams', $userTeams);
     $this->session->set('roles', $rolesAndScope['roles']);
     $this->session->set('scope', $rolesAndScope['scope']);
     return $this->getCredentials();
@@ -191,10 +183,27 @@ class UsersController extends Controller {
                         'id' => $user['id'],
                         'name' => $user['name'],
                         'email' => $user['email'],
+                        'teams' => $this->session->get('teams'),
                         'roles' => $this->session->get('roles'),
                         'scope' => $this->session->get('scope')
                       ]
     ];
+  }
+  
+  private function getUserTeams($id) {
+    $user = Users::findFirstById($id);
+    $teamsFromUser = $user->getTeams('active = 1 OR approved = 0');
+    $teams = [];
+    foreach($teamsFromUser as $index => $team) {
+      $teams[$index] = $team->toArray();
+      $teams[$index]['section'] = ['id' => $team->section, 'name' => $team->parentSection->name];
+      $members = $team->users;
+      $teams[$index]['members'] = [];
+      foreach($members as $member) {
+        $teams[$index]['members'][] = ['id' => $member->id, 'name' => $member->name];
+      }
+    }
+    return $teams;
   }
   
   public static function errorArray(&$model) {

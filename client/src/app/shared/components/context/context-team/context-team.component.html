@@ -1,0 +1,13 @@
+<div class="input-group" id="teamSelectorInput">
+  <span class="input-group-addon"><i class="zmdi zmdi-accounts"></i>&nbsp;&nbsp;Work Done As</span>
+  <div class="form-group form-group--select" style="border: 1px solid #eceff1">
+    <div class="select">
+      <select class="form-control" required (change)="selectTeam(teamSelector.value)" [(value)]="this.submitAsSelected" #teamSelector>
+        <option value="" disabled>Choose a Team or Solo if you worked alone</option>
+        <option *ngFor="let team of teams" [value]="team.id">Team {{team.name}} ({{ team.members }})</option>
+        <option [value]="0">Solo Work</option>
+      </select>
+      <i class="form-group__bar"></i>
+    </div>
+  </div>
+</div>

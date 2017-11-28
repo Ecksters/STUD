@@ -10,3 +10,5 @@ client/\.editorconfig
 client/package-lock\.json
 
 server/nbproject/
+
+client/dist/

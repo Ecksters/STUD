@@ -21,6 +21,7 @@ export class SharedService {
     user = { id: '', name: 'Guest', email: ''};
     roles = [];
     scope = [];
+    teams = [];
     regionCount = 0;
     locationCount = 0;
     sectionCount = 0;
@@ -100,6 +101,7 @@ export class SharedService {
       this.user = { id: results['user'].id, name: results['user'].name, email: results['user'].email };
       this.roles = results['user'].roles;
       this.scope = results['user'].scope;
+      this.teams = results['user'].teams;
 
       this.regionCount = Object.keys(this.roles[Level.Region]).length;
       this.locationCount = (this.roles[Level.Location] && Object.keys(this.roles[Level.Location]).length) || 0;

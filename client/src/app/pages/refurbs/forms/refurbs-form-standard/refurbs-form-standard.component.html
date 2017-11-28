@@ -183,6 +183,8 @@
     </div>
   </ng-container>
   <br>
-  <button [disabled]="loading" type="submit" class="btn btn-primary">{{ submitVerb }} Refurb</button> <i *ngIf="loading" class="zmdi zmdi-hc-lg zmdi-spinner"></i>
+  <context-team (submitAsChange)="updateSubmitAs($event)"></context-team>
+  <br>
+  <button [disabled]="loading || !submitAsSelected" type="submit" class="btn btn-primary">{{ submitVerb }} Refurb</button> <i *ngIf="loading" class="zmdi zmdi-hc-lg zmdi-spinner"></i>
   <span *ngFor="let error of serverErrors" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
 </form>

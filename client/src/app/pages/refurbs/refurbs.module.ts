@@ -1,3 +1,4 @@
+import { ContextTeamComponent } from './../../shared/components/context/context-team/context-team.component';
 import { RefurbsFormStandardComponent } from './forms/refurbs-form-standard/refurbs-form-standard.component';
 import { RefurbsListComponent } from './list/refurbs-list/refurbs-list.component';
 import { MomentModule } from 'angular2-moment';
@@ -11,7 +12,8 @@ import { NgModule } from '@angular/core';
 @NgModule ({
     declarations: [
       RefurbsListComponent,
-      RefurbsFormStandardComponent
+      RefurbsFormStandardComponent,
+      ContextTeamComponent
     ],
     imports: [
         CommonModule,
@@ -20,7 +22,8 @@ import { NgModule } from '@angular/core';
     ],
     exports: [
       RefurbsListComponent,
-      RefurbsFormStandardComponent
+      RefurbsFormStandardComponent,
+      ContextTeamComponent
     ]
 })
 export class RefurbsModule {  }
