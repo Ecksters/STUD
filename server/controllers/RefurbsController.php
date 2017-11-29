@@ -14,9 +14,6 @@ class RefurbsController extends Controller
     $refurbData['location'] = $sectionLineage->location;
     $refurbData['region'] = $sectionLineage->region;
     $refurbData['submitterSubmit'] = $this->session->get('user')['id'];
-    if(isset($refurbData['teamSubmit'])) {
-      $refurb->teamSubmit = $refurbData['teamSubmit'];
-    }
     
     $refurb = new Refurbs();
     if ($refurb->create($refurbData, ['region', 'location', 'sectionSubmit', 'submitterSubmit', 'teamSubmit',
@@ -49,6 +46,18 @@ class RefurbsController extends Controller
   public function verify() {
     $refurbData = array_filter($this->request->getPost('refurb'), 'strlen');
     $refurb = Refurbs::findFirstById($refurbData['id']);
+    if($this->session->get('roles')[LEVEL_LOCATION][$this->request->getPost('context')[0]] < ROLE_LOCATIONADMIN) {
+      if($refurb->teamSubmit != NULL) {
+        foreach($this->session->get('teams') as $team) {
+          if($refurb->teamSubmit == $team['id']) {
+            throw new ErrorException('Cannot verify a refurb you or a team you are on submitted', 403, 10);
+          }
+        }
+      }
+      if($refurb->submitterSubmit == $this->session->get('user')['id']) {
+            throw new ErrorException('Cannot verify a refurb you or a team you are on submitted', 403, 10);
+      }
+    }
     
     $refurbHistory = new RefurbsHistory();
     $refurbHistory->create(['refurb' => $refurb->id, 'user' => $this->session->get('user')['id'], 'editedValue' => 'Verified']);

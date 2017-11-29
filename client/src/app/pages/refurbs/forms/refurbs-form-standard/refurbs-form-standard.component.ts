@@ -1,7 +1,7 @@
 import { SystemMessageService } from './../../../../shared/services/systemMessage.service';
 import { RefurbsService } from '../../../../shared/services/refurbs.service';
 import { NgForm } from '@angular/forms/src/directives';
-import { SharedService } from '../../../../shared/services/shared.service';
+import { SharedService, Level, Role } from '../../../../shared/services/shared.service';
 import { Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 
 @Component({
@@ -46,6 +46,12 @@ export class RefurbsFormStandardComponent implements OnInit {
       this.refurb.sectionSubmit = this.sharedService.sectionSelected;
       this.refurb.submitterSubmit = this.sharedService.user.id;
     }
+  }
+
+  canVerify() {
+    return this.sharedService.roles[Level.Section][this.sharedService.sectionSelected] >= Role.LocationAdmin
+    || !(this.refurb.submitterSubmit == this.sharedService.user.id ||
+      this.sharedService.teams.filter((team) => team.id == this.refurb.teamSubmit).length !== 0);
   }
 
   confirmedInfo(): boolean {

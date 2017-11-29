@@ -1,3 +1,6 @@
+<div class="alert alert-danger" role="alert" *ngIf="!canVerify()">
+    You cannot verify refurbs submitted by yourself or a team you are on.
+</div>
 <form (ngSubmit)="newRefurbForm.valid && confirmedInfo() && submitRefurb(newRefurbForm)" novalidate #newRefurbForm="ngForm">
   <h4>Appearance</h4>
   <div class="input-group">
@@ -185,6 +188,6 @@
   <br>
   <context-team (submitAsChange)="updateSubmitAs($event)"></context-team>
   <br>
-  <button [disabled]="loading || !submitAsSelected" type="submit" class="btn btn-primary">{{ submitVerb }} Refurb</button> <i *ngIf="loading" class="zmdi zmdi-hc-lg zmdi-spinner"></i>
+  <button [disabled]="loading || !submitAsSelected || !canVerify()" type="submit" class="btn btn-primary">{{ submitVerb }} Refurb</button> <i *ngIf="loading" class="zmdi zmdi-hc-lg zmdi-spinner"></i>
   <span *ngFor="let error of serverErrors" style="margin: 2px;" class="badge badge-danger">{{ error }}</span>
 </form>
