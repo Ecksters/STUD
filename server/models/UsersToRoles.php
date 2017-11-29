@@ -11,7 +11,7 @@ class UsersToRoles extends Model
   
   public static function getRolesAndScope($user) {
     $db = Di::getDefault()->get('modelsManager');
-    $userRoles = [];
+    $userRoles = ['1' => [], '2' => [], '3' => [], '4' => []];
     $scope = [];
     
     

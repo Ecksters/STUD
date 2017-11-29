@@ -2,9 +2,42 @@
     <header class="content__title">
       <h1>Location Leaderboards</h1>
       <small>Compete and discover who the top submitters are within your location</small>
-      <h3>Work in Progress, check back in later</h3>
     </header>
     <div class="alert alert-warning" role="alert" *ngIf="!sharedService.locationSelected">
         You must select a Location at the top right to view the Leaderboards for that Location
     </div>
+    <ng-content *ngIf="sharedService.locationSelected">
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Top Submitters</h4>
+          <div class="row">
+            <div class="col-sm-12">
+              <ngx-datatable class="material striped"
+                [rowHeight]="'auto'"
+                [columnMode]="'force'"
+                [rows]="submitLeaders">
+                <ngx-datatable-column prop="count" name="Submitted" sortable="false"></ngx-datatable-column>
+                <ngx-datatable-column prop="name"  sortable="false"></ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-body">
+          <h4 class="card-title">Top Verifiers</h4>
+          <div class="row">
+            <div class="col-sm-12">
+              <ngx-datatable class="material striped"
+                [rowHeight]="'auto'"
+                [columnMode]="'force'"
+                [rows]="verifyLeaders">
+                <ngx-datatable-column prop="count" name="Verified" sortable="false"></ngx-datatable-column>
+                <ngx-datatable-column prop="name"  sortable="false"></ngx-datatable-column>
+              </ngx-datatable>
+            </div>
+          </div>
+        </div>
+      </div>
+    </ng-content>
 </section>

@@ -1,3 +1,5 @@
+import { NgxDatatableModule } from '@swimlane/ngx-datatable';
+import { StatsByLocationService } from './../../../shared/services/statsByLocation.service';
 import { LeaderboardsLocationComponent } from './leaderboards-location.component';
 import { LeaderboardsModule } from './../leaderboards.module';
 import { FormsModule } from '@angular/forms';
@@ -18,9 +20,12 @@ const HOME_ROUTE = [
       CommonModule,
       SharedModule,
       LeaderboardsModule,
+      NgxDatatableModule,
       RouterModule.forChild(HOME_ROUTE)
     ],
-    providers: []
+    providers: [
+      StatsByLocationService
+    ]
 })
 
 export class LeaderboardsLocationModule {  }

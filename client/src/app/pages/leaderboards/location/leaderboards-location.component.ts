@@ -1,3 +1,4 @@
+import { StatsByLocationService } from './../../../shared/services/statsByLocation.service';
 import { SharedService } from '../../../shared/services/shared.service';
 import { Component, OnInit } from '@angular/core';
 
@@ -7,12 +8,19 @@ import { Component, OnInit } from '@angular/core';
 })
 export class LeaderboardsLocationComponent implements OnInit {
 
-    constructor(public sharedService: SharedService) {
+    submitLeaders = [];
+    verifyLeaders = [];
+
+    constructor(public sharedService: SharedService, public stats: StatsByLocationService) {
 
     }
 
     ngOnInit() {
-
+      this.stats.getStats().subscribe(
+      (results: any) => {
+        this.submitLeaders = results.submitLeaders;
+        this.verifyLeaders = results.verifyLeaders;
+      });
     }
 
 }

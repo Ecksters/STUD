@@ -171,6 +171,17 @@ $permissions['SectionController'] = [
     'createTeam' => ROLE_USER
 ];
 
+// StatsByLocation handler
+$locationStats = new MicroCollection();
+$locationStats->setHandler('StatsByLocationController', true);
+$locationStats->setPrefix('/locationStats');
+$locationStats->post('/leaderboards', 'getStats');
+$app->mount($locationStats);
+$permissions['StatsByLocationController'] = [
+    'default_role' => ROLE_RESTRICTED,
+    'default_level' => LEVEL_LOCATION
+];
+
 $app->notFound(
     function () use ($app) {
         throw new ErrorException('URI not found: ' . $app->request->getMethod() . ' ' . $app->request->getURI(), 404, 10);
